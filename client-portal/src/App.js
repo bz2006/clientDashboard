@@ -17,7 +17,6 @@ import AssetsInfo from "./clientpages/assetInfo";
 
 axios.defaults.baseURL = "http://148.113.44.181:7026"
 
-
 function App() {
   return (
     <AuthProvider>
