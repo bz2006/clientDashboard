@@ -27,7 +27,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/media/reports" element={<ReportGenerator />} />
 
-        {/* Protect these routes with ProtectedRoute */}
         <Route
           path="/home"
           element={
