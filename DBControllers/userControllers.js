@@ -1,0 +1,191 @@
+
+import User from '../models/userModel.js';
+import AdminRoles from '../models/AdminRoles.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+
+// Get GeoFences for a user
+export const getGeoFences = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.status(200).json({ success: true, geoFences: user.geoFences });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error fetching geo fences' });
+  }
+};
+
+// Add a new GeoFence
+export const addGeoFence = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, pointType, latitude, longitude, radius } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    user.geoFences.push({ name, pointType, latitude, longitude, radius });
+    await user.save();
+
+    res.status(201).json({ success: true, message: 'Geo fence added successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error adding geo fence' });
+  }
+};
+
+export const updateGeoFence = async (req, res) => {
+  try {
+    const { userid, geofenceid } = req.params;
+    const { name, pointType, latitude, longitude, radius } = req.body;
+
+    // Find the user
+    const user = await User.findById(userid);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Find the geofence within the user's geoFences array
+    const geofence = user.geoFences.id(geofenceid);
+    if (!geofence) {
+      return res.status(404).json({ success: false, message: 'Geofence not found' });
+    }
+
+    // Update geofence fields
+    if (name !== undefined) geofence.name = name;
+    if (pointType !== undefined) geofence.pointType = pointType;
+    if (latitude !== undefined) geofence.latitude = latitude;
+    if (longitude !== undefined) geofence.longitude = longitude;
+    if (radius !== undefined) geofence.radius = radius;
+
+    await user.save(); // Save the updated user document
+
+    res.status(200).json({ success: true, message: 'Geofence updated successfully', geofence });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error updating geofence' });
+  }
+};
+
+
+// Get live data of a unit
+
+
+// Delete a GeoFence by ID
+export const deleteGeofenceById = async (req, res) => {
+  try {
+    const { userid, geofenceid } = req.params;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userid,
+      { $pull: { geoFences: { _id: geofenceid } } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.status(200).json({ success: true, message: 'Geofence deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting geofence:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+
+export const VerifyPassword = async (req, res) => {
+  try {
+    const { userid, password } = req.body;
+
+    // Find user by username
+    const user = await User.findById(userid);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Compare entered password with stored hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    res.status(200).json({ message: "Password is correct" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+export const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract userId from request parameters
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "User ID is required" });
+    }
+
+    const updatedUser = await User.findById(id);
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    } else {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      updatedUser.password = hashedPassword
+    }
+    await updatedUser.save();
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error updating user:", error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
+  }
+};
+
+
+export const AdmClientLogin = async (req, res) => {
+  try {
+    const { admid, clid } = req.body;
+
+
+    // Check if admin exists
+    const admin = await AdminRoles.findById(admid);
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+
+    // Check if client exists
+    const client = await User.findOne({ _id: clid });
+    if (!client) {
+      return res.status(404).json({ message: 'Client not found' });
+    }
+
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: client._id, admid: admin._id },
+      'TR24-PWRD-STRE', // Replace with process.env.SECRET_KEY for security
+      { expiresIn: '5m' }
+    );
+
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      data: {
+        userId: client._id,
+        firstname: client.firstname,
+        company: client.company,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
