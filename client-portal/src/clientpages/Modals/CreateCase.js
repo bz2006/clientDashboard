@@ -4,7 +4,7 @@ import Modal from '../../Components/Modal';
 import { caseDescOptions } from '../../DataHelpers/caseOptions';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingOverlay from '../../Components/Loader';
-import { message } from 'antd';
+
 
 function CreateNewCase({ open, onClose,selected }) {
     const now = new Date();
@@ -31,7 +31,7 @@ e.preventDefault();
             const response = await axios.post('/api-trkclt/create-incident', formData);
 
             if (response.status === 201) {
-message.success("Incident created successfully")
+//message.success("Incident created successfully")
                 setFormData({
                     unit: "",
                     caseType: "",

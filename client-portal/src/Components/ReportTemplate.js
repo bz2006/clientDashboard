@@ -15,7 +15,7 @@ const RTemplate = ({reports,essentials}) => (
             {/* Header Section */}
             <View style={styles.firstPageHeader}>
                 <View style={styles.headerLeft}>
-                    <Image src="/assets/trak24comtr.png" style={styles.logoLarge} />
+                    <Image src={window.location.origin + "/assets/trak24comtr.png"} style={styles.logoLarge} />
                 </View>
                 <View style={styles.headerRight}>
                     <Text style={styles.companyAddress}>1, 44/1535-3, KOLATHPARAMBIL ANNEX</Text>

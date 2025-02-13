@@ -5,13 +5,12 @@ import HomePage from "./HomePage";
 import MapTracking from "./clientpages/mapTracking";
 import Login from "./login";
 import "./App.css"
-import ProtectedRoute from "./auth/protectedRoutes"; // Correct import
-import SP from "./clientpages/supportCenter";
+import ProtectedRoute from "./auth/protectedRoutes"; 
 import ReportViewer from "./clientpages/reportViewer";
 import PointIntrest from "./clientpages/pointofintrest";
 import SupportCenter from "./clientpages/supportCenter";
 import { AuthProvider } from "./contexts/AuthContext";
-import ReportGenerator from "./reportGenerator";
+ import ReportGenerator from "./reportGenerator";
 import Reports from "./clientpages/reports";
 import axios from "axios";
 import AssetsInfo from "./clientpages/assetInfo";

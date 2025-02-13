@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@mapbox/polyline": "^1.2.1",
     "@react-pdf/renderer": "^4.1.6",
-    "antd": "^5.23.3",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
     "geolib": "^3.3.4",
@@ -24,7 +22,7 @@
   },
   "scripts": {
     "start": "cross-env PORT=3001 react-scripts start",
-    "build": "ESLINT_NO_DEV_ERRORS=true react-scripts build",
+    "build": " react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

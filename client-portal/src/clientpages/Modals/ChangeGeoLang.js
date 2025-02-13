@@ -4,7 +4,6 @@ import Modal from '../../Components/Modal';
 import { caseDescOptions } from '../../DataHelpers/caseOptions';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingOverlay from '../../Components/Loader';
-import { message } from 'antd';
 
 function ChangeGeoLang({open, onClose}) {
 

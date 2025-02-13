@@ -4,7 +4,7 @@ import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { IoSettingsOutline } from "react-icons/io5";
-import { Dropdown } from 'antd';
+// import { Dropdown } from 'antd';
 import { useAuth } from '../contexts/AuthContext';
 import ChangeGeoLang from '../clientpages/Modals/ChangeGeoLang';
 import ChangePassword from '../clientpages/Modals/ChangePassword';
@@ -76,24 +76,24 @@ const Header = () => {
     setselected(btn); // Toggle current menu, close others
   };
 
-  const items = [
-    {
-      key: '1',
-      label: (
-        <a onClick={()=>setIsModalOpen(true)}>
-          Geolocation Language
-        </a>
-      ),
-    },
-    {
-      key: '3',
-      label: (
-        <a onClick={()=>setispassModalOpen(true)}>
-          Change Password 
-        </a>
-      ),
-    },
-  ];
+  // const items = [
+  //   {
+  //     key: '1',
+  //     label: (
+  //       <a onClick={()=>setIsModalOpen(true)}>
+  //         Geolocation Language
+  //       </a>
+  //     ),
+  //   },
+  //   {
+  //     key: '3',
+  //     label: (
+  //       <a onClick={()=>setispassModalOpen(true)}>
+  //         Change Password 
+  //       </a>
+  //     ),
+  //   },
+  // ];
   return (
     <>
         {isModalOpen === true ? (<ChangeGeoLang open={isModalOpen} onClose={closeModal} />) : null}
@@ -134,7 +134,7 @@ const Header = () => {
         <div className="flex items-center space-x-3">
           <h1 className=' text-lg text-black dark:text-white'>Hi, {DispalyName}</h1>
           <ThemeSwitcher />
-          <Dropdown
+          {/* <Dropdown
             menu={{
               items,
             }}
@@ -145,7 +145,7 @@ const Header = () => {
           >
             <a className="p-2  hover:bg-gray-100 dark:hover:bg-[#343A46] rounded-full cursor-pointer" title='Settings'>
               <IoSettingsOutline className=' text-black dark:text-white size-7' /></a>
-          </Dropdown>
+          </Dropdown> */}
 
           <a className="p-2  hover:bg-gray-100 dark:hover:bg-[#343A46] rounded-full cursor-pointer" title='Logout'>
             <IoIosLogOut onClick={logout} className=' text-black dark:text-white size-8' />

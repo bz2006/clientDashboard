@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { lazy, Suspense,useEffect,useState } from "react";
 import ReactDOM from 'react-dom';
-import { PDFViewer,pdf  } from '@react-pdf/renderer';
-import RTemplate from '../Components/ReportTemplate';
+import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
 import { useSearchParams } from "react-router-dom";
 import axios from 'axios';
 import LoadingOverlay from '../Components/Loader';
 import { processReportData } from '../DataHelpers/ReportPro';
 
+const RTemplate = lazy(() => import("../Components/ReportTemplate"));
 function ReportViewer() {
     const [searchParams] = useSearchParams();
     const [data, setData] = useState([]);
     const [isFetching, setIsFetching] = useState(false); // Track fetching state
-    const [isProcessing, setIsProcessing] = useState(false); 
-    const[loading,setloading]=useState(false)
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [loading, setloading] = useState(false)
     const arr = searchParams.get("array");
 
     const array = arr ? JSON.parse(decodeURIComponent(arr)) : [];
@@ -29,7 +29,7 @@ function ReportViewer() {
             const response = await axios.get(url);
 
             setIsFetching(false); // Fetching complete
-            setIsProcessing(true); 
+            setIsProcessing(true);
             const d = await processReportData(response.data.reports[0].reports);
             setData(d);
             setIsProcessing(false); // Processing complete
@@ -43,22 +43,28 @@ function ReportViewer() {
     };
     return (
         <>
-            {isFetching ? (
-                    <LoadingOverlay report={true} isLoading={loading} message={"Fetching Reports..."}/>
-            ) : isProcessing ? (
-                 <LoadingOverlay report={true} isLoading={loading} message={"Processing Reports..."}/>
-            ) : data.length > 0 ? (
-                <PDFViewer className="w-full h-[100vh]">
-                    <RTemplate reports={data} essentials={array} />
-                </PDFViewer>
-            ) : (
-                <div className="flex justify-center items-center h-screen">
-                    <div className="text-center">
-                        <h1>No Reports Available</h1>
-                    </div>
+        {isFetching ? (
+            <LoadingOverlay report={true} isLoading={loading} message={"Fetching Reports..."}/>
+        ) : isProcessing ? (
+            <LoadingOverlay report={true} isLoading={loading} message={"Processing Reports..."}/>
+        ) : data.length > 0 ? (
+            <>
+                {/* PDF Download Button */}
+                <PDFDownloadLink 
+                    document={<RTemplate reports={data} essentials={array} />} 
+                    fileName="report.pdf"
+                >
+                    {({ loading }) => loading ? "Generating PDF..." : "Download PDF"}
+                </PDFDownloadLink>
+            </>
+        ) : (
+            <div className="flex justify-center items-center h-screen">
+                <div className="text-center">
+                    <h1>No Reports Available</h1>
                 </div>
-            )}
-        </>
+            </div>
+        )}
+    </>
     );
 }
 

@@ -4,7 +4,6 @@ import ThemeSwitcher from './Components/themeSwitcher';
 import axios from "axios"
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from './contexts/AuthContext';
-import { message } from 'antd';
 
 function Login() {
 
@@ -35,7 +34,7 @@ function Login() {
                     localStorage.setItem('token', response.data?.token)
                     localStorage.setItem('user', response.data?.data.userId)
                     encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
-                    message.success("Log In Success")
+                   // message.success("Log In Success")
                     window.location.href = "/home"
                
             }
@@ -59,15 +58,15 @@ function Login() {
                     localStorage.setItem('token', response.data?.token)
                     localStorage.setItem('user', response.data?.data.userId)
                     encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
-                    message.success("Log In Success")
+                   // message.success("Log In Success")
                     window.location.href = "/home"
                 } else {
-                    message.error("Accessing this platform not allowed to this user")
+                  //  message.error("Accessing this platform not allowed to this user")
 
                 }
             }
         } catch (error) {
-            message.error("Failes to login")
+           // message.error("Failes to login")
             console.error(error)
         }
     }
