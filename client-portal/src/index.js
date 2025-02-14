@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
   <ThemeProvider>
-    <BrowserRouter basename='/client'>
+    <BrowserRouter>
       <App />
     </BrowserRouter>
   </ThemeProvider>
