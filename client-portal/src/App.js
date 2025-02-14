@@ -6,7 +6,7 @@ import MapTracking from "./clientpages/mapTracking";
 import Login from "./login";
 import "./App.css"
 import ProtectedRoute from "./auth/protectedRoutes"; 
-// import ReportViewer from "./clientpages/reportViewer";
+import ReportViewer from "./clientpages/reportViewer";
 import PointIntrest from "./clientpages/pointofintrest";
 import SupportCenter from "./clientpages/supportCenter";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -49,14 +49,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* <Route
+        <Route
           path="/reports-center/viewer"
           element={
             <ProtectedRoute>
               <ReportViewer />
             </ProtectedRoute>
           }
-        /> */}
+        />
 
         <Route
           path="/point-of-intrest"
