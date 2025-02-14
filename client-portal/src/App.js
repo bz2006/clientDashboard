@@ -10,7 +10,7 @@ import ReportViewer from "./clientpages/reportViewer";
 import PointIntrest from "./clientpages/pointofintrest";
 import SupportCenter from "./clientpages/supportCenter";
 import { AuthProvider } from "./contexts/AuthContext";
-//  import ReportGenerator from "./reportGenerator";
+import ReportGenerator from "./reportGenerator";
 import Reports from "./clientpages/reports";
 import axios from "axios";
 import AssetsInfo from "./clientpages/assetInfo";
@@ -23,7 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/media/reports" element={<ReportGenerator />} /> */}
+        <Route path="/media/reports" element={<ReportGenerator />} />
 
         <Route
           path="/home"
