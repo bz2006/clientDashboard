@@ -23,4 +23,3 @@ jobs:
           npm install
           cd client-portal 
           npm install
-          CI=false npm run build
