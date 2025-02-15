@@ -74,7 +74,7 @@ function ReportGenerator() {
         try {
             
             setIsFetching(true); // Start fetching
-            const url = `http://148.113.44.181:8001/reports/by-date?startDate=${start}&endDate=${end}&imei=${imei}`;
+            const url = `/api-trkclt/reports/by-date?startDate=${start}&endDate=${end}&imei=${imei}`
             const response = await axios.get(url);
 
             setIsFetching(false); // Fetching complete
