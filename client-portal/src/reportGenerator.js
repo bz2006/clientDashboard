@@ -78,9 +78,9 @@ function ReportGenerator() {
             const response = await axios.get(url);
 
             setIsFetching(false); // Fetching complete
-            setIsProcessing(true); // Start processing
+            setIsProcessing(true); 
 
-            const d = await processReportData(response.data.receivedData[0].reports);
+            const d = await processReportData(response.data.reports[0].reports);
             setData(d);
             setIsProcessing(false); // Processing complete
         } catch (error) {
