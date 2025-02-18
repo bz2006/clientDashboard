@@ -18,10 +18,10 @@ app.use(cors({
 app.use(express.json());
 
 
-app.use("/api-trkclt",authRoute)
-app.use("/api-trkclt",unitRoute)
-app.use("/api-trkclt",incidentRoute)
-app.use("/api-trkclt",userRoute)
+app.use("/api/api-trkclt",authRoute)
+app.use("/api/api-trkclt",unitRoute)
+app.use("/api/api-trkclt",incidentRoute)
+app.use("/api/api-trkclt",userRoute)
 
 
 const __filename = fileURLToPath(import.meta.url);
