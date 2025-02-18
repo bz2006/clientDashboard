@@ -15,7 +15,7 @@ import Reports from "./clientpages/reports";
 import axios from "axios";
 import AssetsInfo from "./clientpages/assetInfo";
 
-axios.defaults.baseURL = "http://148.113.44.181:7026"
+axios.defaults.baseURL = "https://clientdashboard.trak24.in"
 
 function App() {
   return (
