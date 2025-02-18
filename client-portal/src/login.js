@@ -47,7 +47,7 @@ function Login() {
         console.log(username, password);
 
         try {
-            const response = await axios.post("/api-trkclt/cp-login", {
+            const response = await axios.post("https://clientdashboard.trak24.in/api-trkclt/cp-login", {
                 "username": username,
                 "password": password
             })
