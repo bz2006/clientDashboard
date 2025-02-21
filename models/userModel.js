@@ -113,6 +113,11 @@ const userSchema = new mongoose.Schema(
       radius: {
         type: Number,
       },
+    }],
+    devices: [{
+      fcmToken: {
+        type: String,
+      },
     }]
   },
   { timestamps: true }

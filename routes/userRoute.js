@@ -1,5 +1,5 @@
 import express from "express";
-import { addGeoFence, AdmClientLogin, deleteGeofenceById, getGeoFences, updateGeoFence, updateUser, VerifyPassword } from "../DBControllers/userControllers.js";
+import { addDevice, addGeoFence, AdmClientLogin, deleteGeofenceById, getGeoFences, updateGeoFence, updateUser, VerifyPassword } from "../DBControllers/userControllers.js";
 
 const router = express.Router()
 
@@ -17,6 +17,8 @@ router.post("/verify-password", VerifyPassword)
 router.post("/update-user/:id", updateUser)
 
 router.post("/admcl-login", AdmClientLogin)
+
+router.post("/add-device/:id", addDevice)
 
 
 export default router

@@ -189,3 +189,37 @@ export const AdmClientLogin = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+export const addDevice = async (req, res) => {
+  try {
+    const { id } = req.params; // Get user ID from request params
+    const { fcmToken } = req.body; // Get fcmToken from request body
+
+    if (!fcmToken) {
+      return res.status(400).json({ message: "FCM token is required" });
+    }
+
+    // Find the user
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Add the new device
+    const newDevice = { fcmToken };
+    user.devices.push(newDevice);
+    await user.save();
+
+    // Retrieve the newly added device (last item in the array)
+    const addedDevice = user.devices[user.devices.length - 1];
+
+    // Return only the newly added device with _id
+    res.status(200).json({
+      message: "Device added successfully",
+      device: addedDevice, // Includes _id and fcmToken
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
