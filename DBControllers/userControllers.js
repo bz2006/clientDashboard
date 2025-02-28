@@ -223,3 +223,33 @@ export const addDevice = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+
+export const updateSettings = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { settings } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    if (!settings || typeof settings !== "object") {
+      return res.status(400).json({ message: "Invalid settings data" });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.settings = { ...user.settings, ...settings };
+
+    await user.save();
+
+    res.status(200).json({ message: "Settings updated successfully" });
+  } catch (error) {
+    console.error("Error updating settings:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

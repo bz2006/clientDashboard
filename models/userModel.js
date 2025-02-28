@@ -97,6 +97,24 @@ const userSchema = new mongoose.Schema(
         default: false, // Default value for daily auto reports
       },
     },
+    settings: {
+      tripStart: {
+        type: Boolean,
+        default: true, 
+      },
+      tripStop: {
+        type: Boolean,
+        default: false, 
+      },
+      alerts: {
+        type: Boolean,
+        default: true,
+      },
+      emailNotify: {
+        type: Boolean,
+        default: false, 
+      },
+    },
     geoFences: [{
       name: {
         type: String,
