@@ -255,6 +255,7 @@ export const updateSettings = async (req, res) => {
 };
 
 
+
 export const getSettings = async (req, res) => {
   try {
     const { id } = req.params;
