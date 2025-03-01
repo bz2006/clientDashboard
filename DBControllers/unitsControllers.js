@@ -2,6 +2,7 @@ import Units from '../models/UnitsModel.js';
 import User from '../models/userModel.js';
 import IncidentModel from '../models/IncidentModel.js';
 import AnalyticsModel from '../models/AnalyticsModel.js';
+import ReportPath from '../models/ReportPathModel.js';
 
 export const getUserUnits = async (req, res) => {
   try {
@@ -144,5 +145,22 @@ export const getReportsByDateRange = async (req, res) => {
   } catch (error) {
     console.error("Error fetching reports:", error.message);
     res.status(500).json({ success: false, message: 'Could not fetch reports. Ensure the inputs are correct.' });
+  }
+};
+
+export const getHistoryByTravelId = async (req, res) => {
+  try {
+    const { travelid } = req.params;
+    
+    // Find the report by travelid
+    const report = await ReportPath.findOne({ travelid });
+    
+    if (!report) {
+      return res.status(404).json({ message: "No history found for this travel ID." });
+    }
+    
+    res.status(200).json(report.history);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
