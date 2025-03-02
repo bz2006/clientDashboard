@@ -275,3 +275,34 @@ export const getSettings = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+export const checkSpecificFcmToken = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fcmToken } = req.query; // Extract from query parameters
+
+    if (!fcmToken) {
+      return res.status(400).json({ found: false, message: "FCM token is required" });
+    }
+
+    // Find user by ID
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ found: false, message: "User not found" });
+    }
+
+    // Check if the provided FCM token exists in the user's devices array
+    const tokenExists = user.devices.some(device => device.fcmToken === fcmToken);
+
+    if (!tokenExists) {
+      return res.status(404).json({ found: false, message: "FCM token not associated with this user" });
+    }
+
+    res.status(200).json({ found: true });
+  } catch (error) {
+    console.error("Error checking FCM token:", error);
+    res.status(500).json({ found: false, message: "Internal server error" });
+  }
+};
