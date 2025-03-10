@@ -297,7 +297,7 @@ export const checkSpecificFcmToken = async (req, res) => {
     const tokenExists = user.devices.some(device => device.fcmToken === fcmToken);
 
     if (!tokenExists) {
-      return res.status(404).json({ found: false, message: "FCM token not associated with this user" });
+      return res.status(200).json({ found: false, message: "FCM token not associated with this user" });
     }
 
     res.status(200).json({ found: true });

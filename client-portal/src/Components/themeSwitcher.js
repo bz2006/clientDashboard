@@ -9,7 +9,7 @@ const ThemeSwitcher = () => {
   return (
     <div
       onClick={toggleTheme}
-      className="p-2  hover:bg-gray-100 dark:hover:bg-[#343A46] rounded-full cursor-pointer"
+      className="p-2  hover:bg-gray-100 dark:hover:bg-[#28282a] rounded-full cursor-pointer"
     >    {theme === 'light' ? <CiCloudMoon className='text-black size-8'/> : <PiCloudSun className=' size-8'/>} 
     </div>
 

@@ -103,7 +103,7 @@ const Header = () => {
         className={`fixed top-0 w-full z-50 flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-600 text-white transition-shadow ${isScrolled
           ? 'border-b border-gray-200 dark:border-gray-800 shadow-md'
           : ''
-          } bg-white dark:bg-[#23272f]`}
+          } bg-white dark:bg-[#1b1b1d]`}
       >
         {/* Left Corner: Drawer Toggle Button */}
         <div className="flex items-center">
@@ -126,9 +126,9 @@ const Header = () => {
         </div>
 
         {/* Center: Another Logo */}
-        <div className="hidden md:flex items-center">
+        {/* <div className="hidden md:flex items-center">
           <img src="/assets/trak24comtrw.png" alt="Center Logo" className="h-8" />
-        </div>
+        </div> */}
 
         {/* Right Corner: Buttons */}
         <div className="flex items-center space-x-3">
@@ -143,11 +143,11 @@ const Header = () => {
               pointAtCenter: true,
             }}
           >
-            <a className="p-2  hover:bg-gray-100 dark:hover:bg-[#343A46] rounded-full cursor-pointer" title='Settings'>
+            <a className="p-2  hover:bg-gray-100 dark:hover:bg-[#28282a] rounded-full cursor-pointer" title='Settings'>
               <IoSettingsOutline className=' text-black dark:text-white size-7' /></a>
           </Dropdown>
 
-          <a className="p-2  hover:bg-gray-100 dark:hover:bg-[#343A46] rounded-full cursor-pointer" title='Logout'>
+          <a className="p-2  hover:bg-gray-100 dark:hover:bg-[#28282a] rounded-full cursor-pointer" title='Logout'>
             <IoIosLogOut onClick={logout} className=' text-black dark:text-white size-8' />
           </a>
         </div>
@@ -155,7 +155,7 @@ const Header = () => {
 
       {/* Side Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full bg-white dark:bg-[#23272f] shadow-lg z-40 transform transition-transform duration-300 ${isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed top-0 left-0 h-full bg-white dark:bg-[#1b1b1d] shadow-lg z-40 transform transition-transform duration-300 ${isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         style={{ width: '300px' }}
       >
@@ -175,7 +175,7 @@ const Header = () => {
           <nav className="space-y-1 mt-5">
             {/* Simple Menu Items */}
 
-            <div onClick={() => { navigate("/home"); changeselected("#0"); }} className={`cursor-pointer ${selected === "#0" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            <div onClick={() => { navigate("/home"); changeselected("#0"); }} className={`cursor-pointer ${selected === "#0" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Home
               </a>
@@ -183,56 +183,56 @@ const Header = () => {
 
             <div
               onClick={() => { navigate("/core-tracking"); changeselected("#1"); }}
-              className={`cursor-pointer ${selected === "#1" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 cursor-pointer dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}
+              className={`cursor-pointer ${selected === "#1" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 cursor-pointer dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}
             >
               <a className="block text-gray-800 dark:text-gray-200">
                 Core Tracking
               </a>
             </div>
 
-            <div onClick={() => { navigate("/map-tracking"); changeselected("#2"); }} className={`cursor-pointer ${selected === "#2" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            <div onClick={() => { navigate("/map-tracking"); changeselected("#2"); }} className={`cursor-pointer ${selected === "#2" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Map Tracking
               </a>
             </div>
 
-            <div onClick={() => { navigate("/messages"); changeselected("#3"); }} className={`cursor-pointer ${selected === "#3" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            {/* <div onClick={() => { navigate("/messages"); changeselected("#3"); }} className={`cursor-pointer ${selected === "#3" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Messages
               </a>
-            </div>
+            </div> */}
 
-            <div onClick={() => { navigate("/point-of-intrest"); changeselected("#4"); }} className={`cursor-pointer ${selected === "#4" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            <div onClick={() => { navigate("/point-of-intrest"); changeselected("#4"); }} className={`cursor-pointer ${selected === "#4" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Point of Intrest
               </a>
             </div>
 
-            <div onClick={() => { navigate("/Reports"); changeselected("#5"); }} className={`cursor-pointer ${selected === "#5" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            <div onClick={() => { navigate("/Reports"); changeselected("#5"); }} className={`cursor-pointer ${selected === "#5" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Reports
               </a>
             </div>
 
-            {/* <div onClick={() => { navigate("/fleet-management"); changeselected("#6"); }} className={`cursor-pointer ${selected === "#6" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            {/* <div onClick={() => { navigate("/fleet-management"); changeselected("#6"); }} className={`cursor-pointer ${selected === "#6" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Fleet Management
               </a>
             </div>
 
-            <div onClick={() => { navigate("/maintanace-management"); changeselected("#7"); }} className={`cursor-pointer ${selected === "#7" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            <div onClick={() => { navigate("/maintanace-management"); changeselected("#7"); }} className={`cursor-pointer ${selected === "#7" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Maintanace Management
               </a>
             </div> */}
 
-            <div onClick={() => { navigate("/support-center"); changeselected("#8"); }} className={`cursor-pointer ${selected === "#8" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            <div onClick={() => { navigate("/support-center"); changeselected("#8"); }} className={`cursor-pointer ${selected === "#8" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Support Center
               </a>
             </div>
 
-            <div onClick={() => { navigate("/assets-info"); changeselected("#9"); }} className={`cursor-pointer ${selected === "#9" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#343A46] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
+            <div onClick={() => { navigate("/assets-info"); changeselected("#9"); }} className={`cursor-pointer ${selected === "#9" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} hover:bg-gray-100 dark:hover:bg-[#28282a] w-72 p-3 justify-center rounded-tr-2xl rounded-br-2xl`}>
               <a className="block text-gray-800 dark:text-gray-200">
                 Asset Info
               </a>
@@ -241,7 +241,7 @@ const Header = () => {
             {/* <div>
               <button
                 onClick={() => { toggleSubmenu('settings'); changeselected("#3"); }}
-                className={`${selected === "#3" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} flex items-center justify-between w-72 dark:hover:bg-[#343A46] hover:bg-gray-100 mr-4 p-3 rounded-tr-2xl rounded-br-2xl`}
+                className={`${selected === "#3" ? "dark:bg-[#412e28] bg-[#ffeee6]" : ""} flex items-center justify-between w-72 dark:hover:bg-[#28282a] hover:bg-gray-100 mr-4 p-3 rounded-tr-2xl rounded-br-2xl`}
               >
                 Settings
                 <span>{openSubmenu === 'settings' ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>

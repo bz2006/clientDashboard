@@ -76,6 +76,7 @@ function MapTracking() {
         latitude: res.data.liveData.latitude, // Convert latitude to float
         longitude: res.data.liveData.longitude, // Convert longitude to float
       });
+      
       if (liveData.speed > 0) {
         //const newBearing = calculateBearing(location, liveData);
         setVelocity(liveData.speed);
@@ -162,10 +163,10 @@ function MapTracking() {
       <LoadingOverlay isLoading={loading}/>
       <div className="mt-24 flex flex-col lg:flex-row lg:h-[calc(100vh-96px)]">
         {/* Left Side: Asset Details Table */}
-        <div className="min-w-[340px] bg-gray-100 dark:bg-[#23272f] p-2 overflow-y-auto shadow-lg">
+        <div className="min-w-[340px] bg-gray-100 dark:bg-[#1b1b1d] p-2 overflow-y-auto shadow-lg">
           <table className="min-w-80 border border-gray-300 dark:border-gray-700">
             <thead>
-              <tr className="bg-gray-200 dark:bg-[#343a46] ">
+              <tr className="bg-gray-200 dark:bg-[#3b3b3b] ">
                 <th className="px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-300">
                   Sl No
                 </th>
@@ -182,7 +183,7 @@ function MapTracking() {
                 <React.Fragment key={index}>
                   <tr
                     key={asset.liveData.device_id} // Ensure key is unique and preferably stable
-                    className="hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+                    className="hover:bg-gray-200 dark:hover:bg-[#28282a] cursor-pointer"
                     onClick={() => {
                       if (asset.liveData.digital_input_1_status === "1") { setselected(asset._id) };
 

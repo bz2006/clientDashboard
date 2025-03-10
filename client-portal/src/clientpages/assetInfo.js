@@ -67,9 +67,9 @@ function AssetsInfo() {
 
             <div className={`   min-h-screen`}> {/* Theme-based background and text color */}
                 <div className="overflow-x-auto p-4 ">
-                    <table className="min-w-full border border-gray-300 dark:bg-[#16181d] dark:border-gray-700">
+                    <table className="min-w-full border border-gray-300 dark:bg-[#131313] dark:border-gray-700">
                         <thead>
-                            <tr className="bg-gray-200 dark:bg-[#343a46]">
+                            <tr className="bg-gray-200 dark:bg-[#3b3b3b]">
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 whitespace-nowrap">No</th>
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Assets</th>
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Vehicle Reg No</th>

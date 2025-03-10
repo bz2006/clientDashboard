@@ -89,7 +89,7 @@ function PointIntrest() {
                 <div className='flex flex-row justify-end space-x-4 m-4 p-3'>
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className=" w-72 px-4 py-3 border border-gray-600 text-black dark:text-white font-medium rounded-lg dark:hover:bg-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                        className=" w-72 px-4 py-3 border border-gray-600 text-black dark:text-white font-medium rounded-lg dark:hover:bg-[#28282a] hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500"
                     >
                         Add New Point
                     </button>
@@ -111,9 +111,9 @@ function PointIntrest() {
 
             <div className={`   min-h-screen`}> {/* Theme-based background and text color */}
                 <div className="overflow-x-auto p-4 ">
-                    <table className="min-w-full border border-gray-300 dark:bg-[#16181d] dark:border-gray-700">
+                    <table className="min-w-full border border-gray-300 dark:bg-[#1b1b1d] dark:border-gray-700">
                         <thead>
-                            <tr className="bg-gray-200 dark:bg-[#343a46]">
+                            <tr className="bg-gray-200 dark:bg-[#3b3b3b]">
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 whitespace-nowrap">No</th>
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Points</th>
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Point Type</th>
@@ -129,7 +129,7 @@ function PointIntrest() {
                                 <React.Fragment key={index}>
                                     {/* Main Row */}
                                     <tr
-                                        className="hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer"
+                                        className="hover:bg-gray-200 dark:hover:bg-[#28282a] cursor-pointer"
                                     >
                                         <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{index + 1}</td>
                                         <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{item.name}</td>

@@ -7,8 +7,12 @@ html {
 }
 
 html.dark {
-  background-color: #23272f; /* Custom dark theme background */
+  background-color: #1b1b1d; /* Custom dark theme background */
   color: #ffffff; /* Ensure text remains white for dark theme */
+  
+}
+html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Makes the icon white */
 }
 
 

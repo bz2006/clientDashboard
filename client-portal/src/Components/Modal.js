@@ -14,14 +14,14 @@ export default function Modal({ open, onClose, children,size }) {
       <div
         onClick={(e) => e.stopPropagation()}
         className={`
-          bg-white dark:bg-[#23272f] rounded-2xl shadow-lg  ${size?`${size}`:"w-full max-w-lg"} p-8 relative
+          bg-white dark:bg-[#1b1b1d] rounded-2xl shadow-lg  ${size?`${size}`:"w-full max-w-lg"} p-8 relative
           transition-transform duration-300 ease-in-out transform
           ${open ? "scale-100 opacity-100" : "scale-90 opacity-0"}
         `}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full focus:outline-none"
+          className="absolute top-4 right-4 text-black dark:text-white text-xl focus:outline-none"
         >
           ✕
         </button>

@@ -84,7 +84,7 @@ const alertMessages = {
     const message = alertMessages[item] || "Unknown Alert"; // Default message if not found
   
     return (
-      <td className={`px-6 py-4 text-sm ${message==="NIL"?"text-gray-900 dark:text-gray-300":"text-red-700 dark:text-red-700"} text-center`}>
+      <td className={`px-6 py-4 text-sm ${message==="NIL"?"text-gray-900 dark:text-gray-300":"text-red-500 dark:text-red-500 font-bold"} text-center`}>
         {message}
       </td>
     );

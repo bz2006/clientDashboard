@@ -83,7 +83,7 @@ function GetReports() {
     <>
       <Header />
       <div className="flex flex-col mt-10 items-center justify-center min-h-screen  p-6">
-        <div className="dark:bg-[#2b3039]  shadow-lg rounded-2xl p-6 w-full max-w-md">
+        <div className="dark:bg-[#1b1b1d] border  shadow-lg rounded-2xl p-6 w-full max-w-md">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
             Generate Trip Reports
           </h1>
@@ -99,7 +99,7 @@ function GetReports() {
               <select
               value={Asset}
               onChange={(e)=>setAsset(e.target.value)}
-               className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500">
+               className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500">
               <option value="">Select a Unit</option>
                             {Array.isArray(Data) && Data.length > 0 ? (
                                 Data.map((unit, index) => (
@@ -119,7 +119,7 @@ function GetReports() {
                 type="date"
                 value={start}
                 onChange={(e)=>setstart(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
               />
             </div>
 
@@ -131,7 +131,7 @@ function GetReports() {
                 type="date"
                 value={end}
                 onChange={(e)=>setend(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
               />
             </div>
 

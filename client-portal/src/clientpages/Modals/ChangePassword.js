@@ -87,7 +87,7 @@ function ChangePassword({ open, onClose }) {
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                 name="cpass"
                                 placeholder="Enter Current Password"
-                                className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
                                 required
                             />
 
@@ -115,7 +115,7 @@ function ChangePassword({ open, onClose }) {
                                 name="pass"
                                 placeholder="Enter New Password"
                                 disabled={!confirmPassword}
-                                className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
                                 required
                             />
                         </div>

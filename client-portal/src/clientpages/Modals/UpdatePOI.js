@@ -103,7 +103,7 @@ function UpdatePOI({ open, onClose, id,GetData,poiData }) {
                                         onChange={(e)=>setName(e.target.value)}
                                         name="name"
                                         placeholder="Enter Point Name"
-                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
                                         required
                                     />
                                 </div>
@@ -120,7 +120,7 @@ function UpdatePOI({ open, onClose, id,GetData,poiData }) {
                                         name="type"
                                         value={type}
                                         onChange={(e)=>setType(e.target.value)}
-                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
                                         required
                                     >
                                         <option value={0}>Select a Point Type</option>
@@ -196,7 +196,7 @@ function UpdatePOI({ open, onClose, id,GetData,poiData }) {
                                             name="lat"
                                             value={location.lat}
                                             onChange={handleInputChange}
-                                            className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                            className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
                                             required
                                         />
                                     </div>
@@ -214,7 +214,7 @@ function UpdatePOI({ open, onClose, id,GetData,poiData }) {
                                             name="lng"
                                             value={location.lng}
                                             onChange={handleInputChange}
-                                            className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                            className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
                                             required
                                         />
                                     </div>
@@ -232,7 +232,7 @@ function UpdatePOI({ open, onClose, id,GetData,poiData }) {
                                         name="radius"
                                         value={radius}
                                         onChange={handleRadiusChange}
-                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                        className="w-full px-4 py-3 bg-gray-50 dark:bg-[#1b1b1d] border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
                                         required
                                     >
                                         <option value="">Select a Radius</option>

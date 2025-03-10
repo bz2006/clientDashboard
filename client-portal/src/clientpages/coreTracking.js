@@ -170,10 +170,10 @@ function CoreTracking() {
                 </div>
 
                 <div className='flex flex-row justify-end space-x-4 dark:bg-[#16181d] shadow-[0_0px_20px_rgba(0,0,0,0.1)] m-4 p-3 rounded-lg'>
-                    <div className='w-fit h-12 px-4 border border-orange-600 bg-[#f6f7f9] dark:bg-[#343a46] rounded-md flex justify-center items-center'>Total {headers.total} Assets</div>
-                    <div className='w-28 h-12 bg-[#f6f7f9] border border-green-600 dark:bg-[#343a46] rounded-md flex justify-center items-center'>{headers.moving} Moving</div>
-                    <div className='w-28 h-12 bg-[#f6f7f9] border border-red-600 dark:bg-[#343a46] rounded-md flex justify-center items-center'>{headers.stopped} stopped</div>
-                    <div className='w-28 h-12 bg-[#f6f7f9] border border-red-600 dark:bg-[#343a46] rounded-md flex justify-center items-center' title={`${headers.alerts} Assets with Alerts`}>{headers.alerts} Alerts</div>
+                    <div className='w-fit h-12 px-4 border border-orange-600 bg-[#f6f7f9] dark:bg-[#28282a] rounded-md flex justify-center items-center'>Total {headers.total} Assets</div>
+                    <div className='w-28 h-12 bg-[#f6f7f9] border border-green-600 dark:bg-[#28282a] rounded-md flex justify-center items-center'>{headers.moving} Moving</div>
+                    <div className='w-28 h-12 bg-[#f6f7f9] border border-red-600 dark:bg-[#28282a] rounded-md flex justify-center items-center'>{headers.stopped} stopped</div>
+                    <div className='w-28 h-12 bg-[#f6f7f9] border border-red-600 dark:bg-[#28282a] rounded-md flex justify-center items-center' title={`${headers.alerts} Assets with Alerts`}>{headers.alerts} Alerts</div>
                 </div>
             </div>
 
@@ -181,9 +181,9 @@ function CoreTracking() {
 
             <div className={`   min-h-screen`}> {/* Theme-based background and text color */}
                 <div className="overflow-x-auto p-4 ">
-                    <table className="min-w-full border border-gray-300 dark:bg-[#16181d] dark:border-gray-700">
+                    <table className="min-w-full border border-gray-300 dark:bg-[#1b1b1d] dark:border-gray-700">
                         <thead>
-                            <tr className="bg-gray-200 dark:bg-[#343a46]">
+                            <tr className="bg-gray-200 dark:bg-[#3b3b3b]">
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 whitespace-nowrap">No</th>
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">Assets</th>
                                 <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">Date & Time</th>
@@ -202,7 +202,7 @@ function CoreTracking() {
                                 <React.Fragment key={index}>
                                     {/* Main Row */}
                                     <tr
-                                        className="hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer"
+                                        className="hover:bg-gray-200 dark:hover:bg-[#28282a] cursor-pointer"
                                         onClick={() => toggleRow(index)}
                                     >
                                         <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{index + 1}</td>
@@ -261,7 +261,7 @@ function CoreTracking() {
                                     {/* Collapsible Row */}
                                     {expandedRow === index && (
                                         <tr>
-                                            <td colSpan="10" className="px-6 py-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-300">
+                                            <td colSpan="10" className="px-6 py-4 bg-gray-100 dark:bg-[#1b1b1d] text-gray-900 dark:text-gray-300">
                                                 <div className="flex justify-between items-start">
                                                     {/* Information Section */}
                                                     <div className='space-y-7'>
