@@ -280,7 +280,7 @@ export const getSettings = async (req, res) => {
 export const checkSpecificFcmToken = async (req, res) => {
   try {
     const { id } = req.params;
-    const { fcmToken } = req.body; // Extract from query parameters
+    const { fcmToken } = req.query; // Extract from query parameters
 
     if (!fcmToken) {
       return res.status(400).json({ found: false, message: "FCM token is required" });

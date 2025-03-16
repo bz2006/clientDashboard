@@ -89,7 +89,7 @@ export const ClientAppLogin= async (req, res) => {
     // Generate JWT token without expiration
     const token = jwt.sign({ userId: user._id }, 'SECRET_KEY'); 
 
-    res.status(200).json({ message: 'Login successful', token,data:{id:user._id,firstname:user.firstname,company:user.company} });
+    res.status(200).json({ message: 'Login successful', token,data:{id:user._id,firstname:user.firstname,company:user.company,app:user.permissions.applogin} });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Server error', error });
