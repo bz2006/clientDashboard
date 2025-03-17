@@ -75,68 +75,58 @@ function PointIntrest() {
 
     return (
         <>
-            <Header />
-            <LoadingOverlay isLoading={loading}/>
-            {isModalOpen === true ? (<CreatePOI open={isModalOpen} GetData={GetData} id={user} onClose={closeModal} />) : null}
-
-            <div className=' mt-24 flex flex-row justify-between items-center h-full'>
-                <div>
-                    <h1 className='text-black dark:text-white font-semibold text-3xl p-6'>
-                        Points of Intrest (Geofencing)
-                    </h1>
-                </div>
-
-                <div className='flex flex-row justify-end space-x-4 m-4 p-3'>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className=" w-72 px-4 py-3 border border-gray-600 text-black dark:text-white font-medium rounded-lg dark:hover:bg-[#28282a] hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500"
-                    >
-                        Add New Point
-                    </button>
-                    {/* <select
-                        id="assetType"
-                        name="assetType"
-                        // value={selectedCustomer}
-                        // onChange={handleChange}
-                        className="w-full md:min-w-72 px-4 py-3 bg-gray-50 dark:bg-[#23272f] border border-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
-                        required
-                    >
-                        <option value={""}>Select a Point</option>
-                        {Data.map((unit) => (
-                            <option value={unit._id}>{unit.assetMake}</option>
-                        ))}
-                    </select> */}
-                </div>
+        <Header />
+        <LoadingOverlay isLoading={loading} />
+        {isModalOpen === true ? (
+            <CreatePOI open={isModalOpen} GetData={GetData} id={user} onClose={closeModal} />
+        ) : null}
+    
+        <div className="mt-24 flex flex-col md:flex-row justify-between items-center h-full">
+            <div>
+                <h1 className="text-black dark:text-white font-semibold text-4xl p-6 mb-10">
+                    Points of Interest (Geofencing)
+                </h1>
             </div>
-
-            <div className={`   min-h-screen`}> {/* Theme-based background and text color */}
-                <div className="overflow-x-auto p-4 ">
-                    <table className="min-w-full border border-gray-300 dark:bg-[#1b1b1d] dark:border-gray-700">
+    
+            <div className="flex flex-row justify-end m-4 p-3 mb-10">
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="w-72 px-4 py-3 border border-gray-600 text-black dark:text-white font-medium rounded-lg dark:hover:bg-[#28282a] hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                >
+                    Add New Point
+                </button>
+            </div>
+        </div>
+    
+        <div className="min-h-screen px-6">
+            <div className="overflow-hidden rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead>
                             <tr className="bg-gray-200 dark:bg-[#3b3b3b]">
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 whitespace-nowrap">No</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Points</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Point Type</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Latitude & Longitude</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Radius</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">View</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Edit</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Delete</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">No</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Points</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Point Type</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Latitude & Longitude</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Radius</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">View</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Edit</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Delete</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
+                        <tbody className="bg-white dark:bg-[#1b1b1d] divide-y divide-gray-200 dark:divide-gray-700">
                             {Data.map((item, index) => (
                                 <React.Fragment key={index}>
                                     {/* Main Row */}
-                                    <tr
-                                        className="hover:bg-gray-200 dark:hover:bg-[#28282a] cursor-pointer"
-                                    >
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{index + 1}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{item.name}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{item.pointType}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center"> <AddressCell latitude={item.latitude} longitude={item.longitude} /></td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{item.radius}m</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center underline">
+                                    <tr className="hover:bg-gray-100 dark:hover:bg-[#28282a] cursor-pointer transition-colors duration-150">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">{index + 1}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{item.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{item.pointType}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                            <AddressCell latitude={item.latitude} longitude={item.longitude} />
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{item.radius}m</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center underline">
                                             {upModalOpen && selectedItem === item ? (
                                                 <UpdatePOI open={upModalOpen} poiData={item} GetData={GetData} id={user} onClose={upcloseModal} />
                                             ) : null}
@@ -145,36 +135,39 @@ function PointIntrest() {
                                                     setupModalOpen(true); // Open the modal
                                                     setSelectedItem(item); // Pass the selected row data
                                                 }}
+                                                className="text-orange-600 dark:text-orange-500 hover:text-orange-700 dark:hover:text-orange-400"
                                             >
                                                 View
                                             </a>
-                                        </td><td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center underline">
-                                            {upModalOpen && selectedItem === item ? (
-                                                <UpdatePOI open={upModalOpen} poiData={item} GetData={GetData} id={user} onClose={upcloseModal} />
-                                            ) : null}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center underline">
                                             <a
                                                 onClick={() => {
                                                     setupModalOpen(true); // Open the modal
                                                     setSelectedItem(item); // Pass the selected row data
                                                 }}
+                                                className="text-orange-600 dark:text-orange-500 hover:text-orange-700 dark:hover:text-orange-400"
                                             >
                                                 Edit
                                             </a>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center underline"><a
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center underline">
+                                            <a
                                                 onClick={() => DeleteGeofence(item._id)}
+                                                className="text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400"
                                             >
                                                 Delete
-                                            </a></td>
+                                            </a>
+                                        </td>
                                     </tr>
-
                                 </React.Fragment>
                             ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </>
+        </div>
+    </>
     )
 }
 

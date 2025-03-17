@@ -53,48 +53,51 @@ function AssetsInfo() {
 
     return (
         <>
-            <LoadingOverlay isLoading={loading} />
-            <Header />
-            <div className=' mt-24 flex flex-row justify-between items-center h-full'>
-                <div>
-                    <h1 className='text-black dark:text-white font-semibold text-3xl p-6'>
-                        Assets Informations ({Data.length})
-                    </h1>
-                </div>
+        <LoadingOverlay isLoading={loading} />
+        <Header />
+        <div className="mt-24 flex flex-col md:flex-row justify-between items-center h-full">
+            <div>
+                <h1 className="text-black dark:text-white font-semibold text-4xl p-6 mb-10">
+                    Assets Information ({Data.length})
+                </h1>
             </div>
-
-
-
-            <div className={`   min-h-screen`}> {/* Theme-based background and text color */}
-                <div className="overflow-x-auto p-4 ">
-                    <table className="min-w-full border border-gray-300 dark:bg-[#131313] dark:border-gray-700">
+        </div>
+    
+        <div className="min-h-screen px-6">
+            <div className="overflow-hidden rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead>
                             <tr className="bg-gray-200 dark:bg-[#3b3b3b]">
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 whitespace-nowrap">No</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Assets</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Vehicle Reg No</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Service Started On</th>
-
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Speed Limit</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 whitespace-nowrap">Odometer</th>
-                                <th className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">GPS Info</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">No</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Assets</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Vehicle Reg No</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Service Started On</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Speed Limit</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Odometer</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">GPS Info</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
+                        <tbody className="bg-white dark:bg-[#1b1b1d] divide-y divide-gray-200 dark:divide-gray-700">
                             {Data.map((item, index) => (
                                 <React.Fragment key={index}>
                                     {/* Main Row */}
-                                    <tr
-                                        className="hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer"
-                                  
-                                    >
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{index + 1}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{item.assetMake} {item.assetModel}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">{item.assetRegNo}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center"><GeofenceChecker geofences={Geofences} trackerLat={item.liveData.latitude} trackerLng={item.liveData.longitude} /></td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center w-72">70 km/h</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">
-                                            <div className='flex flex-col items-center space-y-3 text-md'>
+                                    <tr className="hover:bg-gray-100 dark:hover:bg-[#28282a] cursor-pointer transition-colors duration-150">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300 text-center">{index + 1}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center">
+                                            {item.assetMake} {item.assetModel}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center">
+                                            {item.assetRegNo}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center">
+                                            <GeofenceChecker geofences={Geofences} trackerLat={item.liveData.latitude} trackerLng={item.liveData.longitude} />
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center">
+                                            70 km/h
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center">
+                                            <div className="flex flex-col items-center space-y-3 text-md">
                                                 <h1>
                                                     {item.liveData.gps_odometer.toString().padStart(7, '0').split('').map((digit, index) => (
                                                         <span
@@ -104,12 +107,10 @@ function AssetsInfo() {
                                                             {digit}
                                                         </span>
                                                     ))}
-
                                                 </h1>
                                             </div>
                                         </td>
-
-                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center">
                                             <div className="flex space-x-1 justify-center">
                                                 <a
                                                     href={`https://www.google.com/maps/search/${item.liveData.latitude},${item.liveData.longitude}`}
@@ -121,7 +122,7 @@ function AssetsInfo() {
                                                     <MdOutlineDirections className="size-6 cursor-pointer" />
                                                 </a>
                                                 <a
-                                                    href='/map-tracking'
+                                                    href="/map-tracking"
                                                     className="p-2 hover:bg-gray-100 dark:hover:bg-[#16181d] rounded-full"
                                                     title="Live Tracking"
                                                 >
@@ -130,14 +131,14 @@ function AssetsInfo() {
                                             </div>
                                         </td>
                                     </tr>
-
                                 </React.Fragment>
                             ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </>
+        </div>
+    </>
     )
 }
 

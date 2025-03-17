@@ -159,100 +159,107 @@ function MapTracking() {
 
   return (
     <>
-      <Header />
-      <LoadingOverlay isLoading={loading}/>
-      <div className="mt-24 flex flex-col lg:flex-row lg:h-[calc(100vh-96px)]">
+    <Header />
+    <LoadingOverlay isLoading={loading} />
+    <div className="mt-24 flex flex-col lg:flex-row lg:h-[calc(100vh-96px)]">
         {/* Left Side: Asset Details Table */}
-        <div className="min-w-[340px] bg-gray-100 dark:bg-[#1b1b1d] p-2 overflow-y-auto shadow-lg">
-          <table className="min-w-80 border border-gray-300 dark:border-gray-700">
-            <thead>
-              <tr className="bg-gray-200 dark:bg-[#3b3b3b] ">
-                <th className="px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-300">
-                  Sl No
-                </th>
-                <th className="px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-300">
-                  Asset Name
-                </th>
-                <th className="px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-300">
-                  Vehicle No
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-300 dark:divide-gray-700">
-              {Data.length > 0 && Data?.map((asset, index) => (
-                <React.Fragment key={index}>
-                  <tr
-                    key={asset.liveData.device_id} // Ensure key is unique and preferably stable
-                    className="hover:bg-gray-200 dark:hover:bg-[#28282a] cursor-pointer"
-                    onClick={() => {
-                      if (asset.liveData.digital_input_1_status === "1") { setselected(asset._id) };
-
-                      setlocation({ latitude: asset.liveData.latitude, longitude: asset.liveData.longitude });
-                      toggleRow(index);
-                    }}
-                  >
-                    <td className="px-4 py-2 text-sm text-gray-900 dark:text-gray-300">
-                      {index + 1}
-                    </td>
-                    <td className="px-4 py-2 text-sm text-gray-900 dark:text-gray-300">
-                      {asset.assetMake ? `${asset.assetMake}, ${asset.assetModel}` : "NIL"}
-                    </td>
-                    <td className="px-4 py-2 text-sm text-gray-900 dark:text-gray-300">
-                      {asset.assetRegNo}
-                    </td>
-                  </tr>
-                  {expandedRow === index && (
-                    <tr>
-                      <td className=" text-sm text-gray-900 dark:text-gray-300" colSpan={3}>
-                        <div className='flex flex-col p-5 space-y-5'>
-                          <div className='flex flex-row space-x-5'>
-                            <div>
-                              <p className="font-semibold text-gray-700 dark:text-gray-300">Date & Time:</p>
-                              <p className="text-gray-900 dark:text-gray-100">{DateTimeFRMT(selectedData.length > 0 ? selectedData.date : asset.liveData.date,selectedData.length > 0 ? selectedData.time : asset.liveData.time)}</p>
-                            </div>
-                          </div>
-
-                          <div className='flex flex-row space-x-5'>
-                            <div>
-                              <p className="font-semibold text-gray-700 dark:text-gray-300">Speed:</p>
-                              <p className="text-gray-900 dark:text-gray-100">{velocity} km/h</p>
-                            </div>
-                            <div>
-                              <p className="font-semibold text-gray-700 dark:text-gray-300">Odometer:</p>
-                              <p className="text-gray-900 dark:text-gray-100">{odo?odo:asset.liveData.gps_odometer} km</p>
-                            </div>
-                            <div>
-                              <p className="font-semibold text-gray-700 dark:text-gray-300">Ignition:</p>
-                              <p className="text-gray-900 dark:text-gray-100">{selectedData.length > 0 ? selectedData.digital_input_1_status == 1 ? 'ON' : 'OFF' : asset.liveData.digital_input_1_status == 1 ? 'ON' : 'OFF'}</p>
-                            </div>
-                          </div>
-
-                          <div>
-                            <p className="font-semibold text-gray-700 dark:text-gray-300">Address:</p>
-                            <p className="text-gray-900 dark:text-gray-100 max-w-80">
-                            <AddressCell latitude={location.latitude? location.latitude : asset.liveData.latitude} longitude={location.longitude? location.longitude : asset.liveData.longitude} /></p>
-                          </div>
-                        </div>
-                      </td>
+        <div className="min-w-[340px] bg-gray-100 dark:bg-[#1b1b1d] p-4 overflow-y-auto shadow-lg">
+            <table className="min-w-full border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden">
+                <thead>
+                    <tr className="bg-gray-200 dark:bg-[#3b3b3b]">
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Sl No</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Asset Name</th>
+                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 dark:text-gray-300">Vehicle No</th>
                     </tr>
-                  )}
+                </thead>
+                <tbody className="divide-y divide-gray-300 dark:divide-gray-700">
+                    {Data.length > 0 && Data.map((asset, index) => (
+                        <React.Fragment key={index}>
+                            {/* Main Row */}
+                            <tr
+                                className="hover:bg-gray-200 dark:hover:bg-[#28282a] cursor-pointer transition-colors duration-150"
+                                onClick={() => {
+                                    if (asset.liveData.digital_input_1_status === "1") {
+                                        setselected(asset._id);
+                                    }
+                                    setlocation({ latitude: asset.liveData.latitude, longitude: asset.liveData.longitude });
+                                    toggleRow(index);
+                                }}
+                            >
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-300">{index + 1}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-300">
+                                    {asset.assetMake ? `${asset.assetMake}, ${asset.assetModel}` : "NIL"}
+                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-300">{asset.assetRegNo}</td>
+                            </tr>
 
+                            {/* Collapsible Row */}
+                            {expandedRow === index && (
+                                <tr>
+                                    <td colSpan={3} className="px-4 py-3 bg-gray-50 dark:bg-[#28282a] border-t border-gray-300 dark:border-gray-700">
+                                        <div className="flex flex-col p-4 space-y-4">
+                                            {/* Date & Time */}
+                                            <div>
+                                                <p className="font-semibold text-gray-700 dark:text-gray-300">Date & Time:</p>
+                                                <p className="text-gray-900 dark:text-gray-100">
+                                                    {DateTimeFRMT(
+                                                        selectedData.length > 0 ? selectedData.date : asset.liveData.date,
+                                                        selectedData.length > 0 ? selectedData.time : asset.liveData.time
+                                                    )}
+                                                </p>
+                                            </div>
 
-                </React.Fragment>
-              ))}
+                                            {/* Speed, Odometer, Ignition */}
+                                            <div className="flex flex-row space-x-6">
+                                                <div>
+                                                    <p className="font-semibold text-gray-700 dark:text-gray-300">Speed:</p>
+                                                    <p className="text-gray-900 dark:text-gray-100">{velocity} km/h</p>
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold text-gray-700 dark:text-gray-300">Odometer:</p>
+                                                    <p className="text-gray-900 dark:text-gray-100">{odo ? odo : asset.liveData.gps_odometer} km</p>
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold text-gray-700 dark:text-gray-300">Ignition:</p>
+                                                    <p className="text-gray-900 dark:text-gray-100">
+                                                        {selectedData.length > 0
+                                                            ? selectedData.digital_input_1_status == 1 ? 'ON' : 'OFF'
+                                                            : asset.liveData.digital_input_1_status == 1 ? 'ON' : 'OFF'}
+                                                    </p>
+                                                </div>
+                                            </div>
 
-            </tbody>
-          </table>
-
+                                            {/* Address */}
+                                            <div>
+                                                <p className="font-semibold text-gray-700 dark:text-gray-300">Address:</p>
+                                                <p className="text-gray-900 dark:text-gray-100 max-w-80">
+                                                    <AddressCell
+                                                        latitude={location.latitude ? location.latitude : asset.liveData.latitude}
+                                                        longitude={location.longitude ? location.longitude : asset.liveData.longitude}
+                                                    />
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </React.Fragment>
+                    ))}
+                </tbody>
+            </table>
         </div>
 
         {/* Right Side: Map Section */}
         <div className="w-full bg-gray-200 dark:bg-[#1c1f25] relative flex items-center justify-center">
-          <MapView pin={'/assets/loc-pin.gif'} size={100} latitude={location.latitude} longitude={location.longitude} />
-          {/* Replace this section with a Map Component */}
+            <MapView
+                pin={'/assets/loc-pin.gif'}
+                size={100}
+                latitude={location.latitude}
+                longitude={location.longitude}
+            />
         </div>
-      </div>
-    </>
+    </div>
+</>
   );
 }
 
