@@ -1,5 +1,5 @@
 import express from "express";
-import { addDevice, addGeoFence, AdmClientLogin, checkSpecificFcmToken, deleteGeofenceById, getGeoFences, getSettings, updateGeoFence, updateSettings, updateUser, VerifyPassword } from "../DBControllers/userControllers.js";
+import { addDevice, addGeoFence, AdmClientLogin, checkSpecificFcmToken, deleteGeofenceById, getGeoFences, getSettings, updateAppUsage, updateGeoFence, updateSettings, updateUser, updateWebUsage, VerifyPassword } from "../DBControllers/userControllers.js";
 
 const router = express.Router()
 
@@ -25,6 +25,10 @@ router.get("/check-fcm/:id", checkSpecificFcmToken)
 router.post("/change-settings/:id", updateSettings)
 
 router.get("/get-settings/:id", getSettings)
+
+router.post("/update-appusage", updateAppUsage)
+
+router.post("/update-webusage", updateWebUsage)
 
 
 export default router

@@ -17,7 +17,7 @@ const Card = ({ icon: Icon, name, path }) => (
     hover:shadow-[inset_6px_6px_12px_0px_#d1d9e6,_inset_-6px_-6px_12px_0px_#ffffff]
     dark:hover:shadow-[inset_6px_6px_12px_0px_#151517,_inset_-6px_-6px_12px_0px_#222224]"
   >
-    <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gray-100 dark:bg-[#1b1b1d] text-blue-600 dark:text-orange-400
+    <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gray-100 dark:bg-[#1b1b1d] text-orange-600 dark:text-orange-400
     shadow-[4px_4px_8px_0px_#d1d9e6,_-4px_-4px_8px_0px_#ffffff] 
     dark:shadow-[4px_4px_8px_0px_#151517,_-4px_-4px_8px_0px_#222224]
     group-hover:shadow-[inset_3px_3px_6px_0px_#d1d9e6,_inset_-3px_-3px_6px_0px_#ffffff]
@@ -46,7 +46,7 @@ const Home = () => {
     <div className="flex flex-col h-screen bg-gray-100 dark:bg-[#1b1b1d]">
       <Header />
       
-      <main className="flex-1 mt-24 px-8 py-6 mx-auto w-full">
+      <main className="flex-1 mt-16 px-8 py-6 mx-auto w-full">
         <div className="mb-8 px-4 py-6 rounded-xl ">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Dashboard</h1>
           <p className="text-gray-600 dark:text-gray-300 mt-1">Access all your tracking and fleet management tools</p>

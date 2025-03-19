@@ -3,6 +3,7 @@ import User from '../models/userModel.js';
 import AdminRoles from '../models/AdminRoles.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import AnalyticsModel from '../models/AnalyticsModel.js';
 
 // Get GeoFences for a user
 export const getGeoFences = async (req, res) => {
@@ -308,3 +309,65 @@ export const checkSpecificFcmToken = async (req, res) => {
 };
 
 
+
+// Get current month and year
+const getCurrentMonthYear = () => {
+  const now = new Date();
+  return { month: now.toLocaleString('default', { month: 'long' }), year: now.getFullYear() };
+};
+
+// Update app usage count
+export const updateAppUsage = async (req, res) => {
+  try {
+    const { month, year } = getCurrentMonthYear();
+
+    const analytics = await AnalyticsModel.findOne();
+
+    if (!analytics) {
+      return res.status(404).json({ message: "Analytics document not found" });
+    }
+
+    // Find usage entry for the current month and year
+    const usageEntry = analytics.usage.find((entry) => entry.month === month && entry.year === year);
+
+    if (usageEntry) {
+      usageEntry.appUsers += 1; // Increment app usage count
+    } else {
+      analytics.usage.push({ month, year, appUsers: 1, webUsers: 0 });
+    }
+
+    await analytics.save();
+    res.status(200).json({ message: "App usage updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Update web usage count
+export const updateWebUsage = async (req, res) => {
+  try {
+    const { month, year } = getCurrentMonthYear();
+
+    const analytics = await AnalyticsModel.findOne();
+
+    if (!analytics) {
+      return res.status(404).json({ message: "Analytics document not found" });
+    }
+
+    // Find usage entry for the current month and year
+    const usageEntry = analytics.usage.find((entry) => entry.month === month && entry.year === year);
+
+    if (usageEntry) {
+      usageEntry.webUsers += 1; // Increment web usage count
+    } else {
+      analytics.usage.push({ month, year, appUsers: 0, webUsers: 1 });
+    }
+
+    await analytics.save();
+    res.status(200).json({ message: "Web usage updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};

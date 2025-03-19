@@ -222,7 +222,7 @@ function Login() {
 
                                     <a
                                         href='/'
-                                        className="border border-orange-600 text-black dark:text-white py-1 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-all"
+                                        className="border border-orange-600 text-black dark:text-white py-1 px-6 rounded-full shadow-lg hover:bg-orange-700/70 transition-all"
                                     >
                                         ← Go Back
                                     </a>
