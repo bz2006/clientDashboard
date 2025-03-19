@@ -19,29 +19,37 @@ function Login() {
         }
 
         const data = JSON.parse(searchParams.get("data"))
-        
-        if(data) {
+
+        if (data) {
             HandleAdminLogin(data)
         }
-        
+
     }, []);
 
     const HandleAdminLogin = async (d) => {
         try {
-            
-            const response = await axios.post("/api-trkclt/admcl-login",{admid:d.admid, clid:d.clid})
+
+            const response = await axios.post("/api-trkclt/admcl-login", { admid: d.admid, clid: d.clid })
             if (response.status === 200) {
-                    localStorage.setItem('token', response.data?.token)
-                    localStorage.setItem('user', response.data?.data.userId)
-                    encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
-                   // message.success("Log In Success")
-                    window.location.href = "/home"
-               
+                localStorage.setItem('token', response.data?.token)
+                localStorage.setItem('user', response.data?.data.userId)
+                encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
+                // message.success("Log In Success")
+                window.location.href = "/home"
+
             }
         } catch (error) {
             console.error(error)
         }
     }
+
+    const UpdateUsage = async () => {
+        try {
+            await axios.post(`/api-trkclt/update-webusage`);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     const HandleLogin = async () => {
         console.log(username, password);
@@ -51,22 +59,25 @@ function Login() {
                 "username": username,
                 "password": password
             })
-            
+
 
             if (response.status === 200) {
                 if (response.data?.data.webp === true) {
-                    localStorage.setItem('token', response.data?.token)
-                    localStorage.setItem('user', response.data?.data.userId)
-                    encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
-                   // message.success("Log In Success")
+                    await Promise.all([
+                        UpdateUsage(),
+                        localStorage.setItem('token', response.data?.token),
+                        localStorage.setItem('user', response.data?.data.userId),
+                        encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
+                    ])
+                    // message.success("Log In Success")
                     window.location.href = "/home"
                 } else {
-                  //  message.error("Accessing this platform not allowed to this user")
+                    //  message.error("Accessing this platform not allowed to this user")
 
                 }
             }
         } catch (error) {
-           // message.error("Failes to login")
+            // message.error("Failes to login")
             console.error(error)
         }
     }
