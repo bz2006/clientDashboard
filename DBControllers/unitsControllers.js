@@ -199,6 +199,19 @@ export const GetReportUnitData =  async (imei) => {
 }
 };
 
+function formatDateTime(date) {
+  const options = { day: "2-digit", month: "short", year: "numeric" }; // Format: 04 Jan 2025
+  const datePart = date.toLocaleDateString("en-US", options);
+
+  const timePart = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true, // Ensures AM/PM format
+  });
+
+  return `${datePart}, ${timePart}`;
+}
+
 export const GenerateAppReport = async (req, res) => {
   try {
     const currentDate = new Date(new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
