@@ -11,7 +11,7 @@ router.get("/reports/by-date", getReportsByDateRange)
 
 router.get("/report-path/:travelid", getHistoryByTravelId)
 
-router.get("/gen-reports", GenerateAppReport)
+router.post("/gen-reports", GenerateAppReport)
 
 
 export default router
