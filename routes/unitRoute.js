@@ -1,5 +1,5 @@
 import express from "express";
-import { getHistoryByTravelId, getLiveData, getReportsByDateRange, getUserUnits } from "../DBControllers/unitsControllers.js";
+import { GenerateAppReport, getHistoryByTravelId, getLiveData, getReportsByDateRange, getUserUnits } from "../DBControllers/unitsControllers.js";
 const router = express.Router()
 
 
@@ -10,6 +10,8 @@ router.get("/get-live/:id", getLiveData)
 router.get("/reports/by-date", getReportsByDateRange)
 
 router.get("/report-path/:travelid", getHistoryByTravelId)
+
+router.get("/gen-reports", GenerateAppReport)
 
 
 export default router
