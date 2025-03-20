@@ -264,12 +264,152 @@ export const GenerateAppReport = async (req, res) => {
 };
 
 const sendReports = async (email, pdfPath) => {
+  const layout=`
+  <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Trip Report</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333333;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+        
+        .logo {
+            max-width: 180px;
+            height: auto;
+        }
+        
+        .content {
+            padding: 30px 20px;
+            line-height: 1.6;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .button:hover {
+            background-color: #2980b9;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #777777;
+            border-top: 1px solid #eeeeee;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+                color: #f5f5f5;
+            }
+            
+            .email-container {
+                background-color: #2d2d2d;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            
+            .header, .footer {
+                border-color: #3d3d3d;
+            }
+            
+            .footer {
+                color: #aaaaaa;
+            }
+            
+            .light-mode-logo {
+                display: none;
+            }
+            
+            .dark-mode-logo {
+                display: inline;
+            }
+        }
+        
+        @media (prefers-color-scheme: light) {
+            .light-mode-logo {
+                display: inline;
+            }
+            
+            .dark-mode-logo {
+                display: none;
+            }
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <img src="https://clientdashboard.trak24.in/assets/trak24comtr.png" alt="Trak24 Logo" class="logo light-mode-logo">
+            <img src="https://clientdashboard.trak24.in/assets/trak24comtrw.png" alt="Trak24 Logo" class="logo dark-mode-logo">
+        </div>
+        
+        <div class="content">
+            <h2>Your Trip Report is Ready</h2>
+            <p>Hello,</p>
+            <p>Your daily trip report has been processed and is ready for download. You can view all your travel details, routes, and analysis in this comprehensive report.</p>
+            <p>Click the button below to Generate & download your report:</p>
+            <a href="${pdfPath}" class="button">Generate & Download Trip Report</a>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Trak24. All rights reserved.</p>
+            <p>If you have any questions, please contact our support team.</p>
+        </div>
+    </div>
+</body>
+</html>
+  `
   const mailOptions = {
       from: 'noreply.trak24@gmail.com',
       to: email,
-      subject: 'Daily Trip Report',
-      text: 'Attached is your daily trip report.',
-       html: `<p>Attached is your daily trip report.</p><p>You can also download it here: <a href="${pdfPath}" target="_blank">Dounload as PDF</a></p>`
+      subject: 'Daily Trip Report - Trak24',
+      html: layout
   };
 
   try {
