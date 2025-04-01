@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  @apply bg-white text-black; /* Default light theme */
+}
+
+html.dark {
+  background-color: #1b1b1d; /* Custom dark theme background */
+  color: #ffffff; /* Ensure text remains white for dark theme */
+  
+}
+
+html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Makes the icon white */
+}
+
+
+/* In your styles.css or App.css */
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-10%);  /* Start off-screen at the top */
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);      /* End in the normal position */
+    opacity: 1;
+  }
+}
+
+/* Apply the slide-in-from-top animation */
+.slide-in-top {
+  animation: slideInFromTop 1s ease-out; /* Duration: 1s, ease-out for smooth transition */
+}
