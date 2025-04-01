@@ -19,6 +19,10 @@ const incidentSchema = new mongoose.Schema(
     details: {
       type: String,
     },
+    read:{
+      type: Boolean,
+      default:false
+    },
     priority: {
       type: String,
     },

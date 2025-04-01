@@ -35,7 +35,7 @@ const Home = () => {
   const cards = [
     { icon: TbLocation, name: "Core Tracking", path: "/core-tracking" },
     { icon: FaRegMap, name: "Map Tracking", path: "/map-tracking" },
-    { icon: TbMessage, name: "Messages", path: "/messages" },
+    // { icon: TbMessage, name: "Messages", path: "/messages" },
     { icon: FaGlobeAmericas, name: "Point of Interest", path: "/point-of-intrest" },
     { icon: TbReportAnalytics, name: "Reports", path: "/reports" },
     { icon: MdSupportAgent, name: "Support Center", path: "/support-center" },
