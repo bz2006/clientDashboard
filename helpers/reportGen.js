@@ -37,9 +37,9 @@ export const BuildReport=async(data,unitData,start,end)=>{
           };
         const res=await processReportData(data[0].reports)
         console.log(__dirname);
-        const outputPath = path.join(__dirname, "trip-report.pdf"); // or any desired filename
+        const outputPath = path.join("/var/www/static-media/uploads", "trip-report.pdf"); // or any desired filename
         generateTripReport(res, Essentials, outputPath);
-        return outputPath;
+        return "http://static-media.trak24.in/uploads/trip-report.pdf";
         
     } catch (error) {
         console.log(error);
