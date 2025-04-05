@@ -35,7 +35,6 @@ export const BuildReport=async(data,unitData,start,end)=>{
             genDate: formatDateTime(currentDate),
             firstname: unitData.firstname
           };
-          console.log("essentials.genDate",Essentials.genDate);
           
         const res=await processReportData(data[0].reports)
         console.log(__dirname);
