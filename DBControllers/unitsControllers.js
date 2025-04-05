@@ -5,6 +5,7 @@ import AnalyticsModel from '../models/AnalyticsModel.js';
 import ReportPath from '../models/ReportPathModel.js';
 import nodemailer from 'nodemailer';
 import { Transporter } from '../helpers/mailTransporter.js';
+import { BuildReport } from '../helpers/reportGen.js';
 
 
 
@@ -83,6 +84,7 @@ export const getLiveData = async (req, res) => {
 };
 
 
+
 export const getReportUnitData = async (req, res) => {
   try {
     const { imei } = req.params;
@@ -138,12 +140,10 @@ export const getReportsByDateRange = async (req, res) => {
     const filteredReports = results.map(doc => ({
       ...doc.toObject(),
       reports: doc.reports.filter(report =>
-          report.startDate >= start && report.startDate <= end
+        report.startDate >= start && report.startDate <= end
       ),
-  }));
+    }));
 
-  console.log(filteredReports);
-  
 
     res.status(200).json({ success: true, reports: filteredReports });
   } catch (error) {
@@ -152,43 +152,82 @@ export const getReportsByDateRange = async (req, res) => {
   }
 };
 
+export const GetReports = async (startDate, endDate, imei) => {
+  try {
+    // Parse the start and end dates
+    const start = parseDate(startDate);
+    const end = parseDate(endDate);
+
+    if (!start || !end) {
+      return res.status(400).json({ success: false, message: 'Invalid date format. Use DD-MM-YYYY.' });
+    }
+
+    console.log(start, end);
+
+    const results = await Units.find({
+      imei: imei,
+      "reports.startDate": { $exists: true }
+    });
+
+    if (!results.length) {
+      return res.status(404).json({ success: false, message: 'No reports found.' });
+    }
+
+    // Filter reports array within the date range
+    const filteredReports = results.map(doc => ({
+      ...doc.toObject(),
+      reports: doc.reports.filter(report =>
+        report.startDate >= start && report.startDate <= end
+      ),
+    }));
+
+
+    return filteredReports;
+  } catch (error) {
+    console.error("Error fetching reports:", error.message);
+  }
+};
+
 export const getHistoryByTravelId = async (req, res) => {
   try {
     const { travelid } = req.params;
-    
+
     // Find the report by travelid
     const report = await ReportPath.findOne({ travelid });
-    
+
     if (!report) {
       return res.status(404).json({ message: "No history found for this travel ID." });
     }
-    
+
     res.status(200).json(report.history);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-export const GetReportUnitData =  async (imei) => {
+export const GetReportUnitData = async (imei) => {
   try {
     // Find the unit by IMEI
-    const unit = await Units.findOne({ imei });
+    const unit = await Units.findOne({ imei }).populate('customer', 'firstname company');
 
-    // If no unit is found, return null
     if (!unit) {
-        return null;
+      return null;
     }
 
-    // Return the required fields
+    // Extract customer data if available
+    const customer = unit.customer || {};
+
     return {
-        make: unit.assetMake || "Unknown",
-        model: unit.assetModel || "Unknown",
-        regNo: unit.assetRegNo || "Unknown"
+      make: unit.assetMake || "Unknown",
+      model: unit.assetModel || "Unknown",
+      regNo: unit.assetRegNo || "Unknown",
+      firstname: customer.firstname || "Unknown",
+      company: customer.company || "Unknown"
     };
-} catch (error) {
+  } catch (error) {
     console.error("Error fetching unit details:", error);
     throw new Error("Internal server error");
-}
+  }
 };
 
 function formatDateTime(date) {
@@ -196,9 +235,9 @@ function formatDateTime(date) {
   const datePart = date.toLocaleDateString("en-US", options);
 
   const timePart = date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true, // Ensures AM/PM format
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true, // Ensures AM/PM format
   });
 
   return `${datePart}, ${timePart}`;
@@ -208,55 +247,105 @@ export const GenerateAppReport = async (req, res) => {
   try {
     const currentDate = new Date(new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
     console.log(new Date().toISOString());
-    
+
     const { start, end, imei, company, firstname, directDown, emailSend, emailAddresses } = req.body;
     console.log("report gen data", start, end, imei, company, firstname, directDown, emailSend, emailAddresses);
 
     const unitData = await GetReportUnitData(imei);
     if (!unitData) {
-        return res.status(400).json({ error: "Unit data not found" });
+      return res.status(400).json({ error: "Unit data not found" });
     }
 
     const serializedArray = encodeURIComponent(JSON.stringify({
-        start,
-        ts: new Date().toISOString(),
-        end,
-        imei,
-        company,
-        make: unitData.make,
-        model: unitData.model,
-        regNo: unitData.regNo,
-        firstname,
-        genDate: formatDateTime(currentDate),
-        range: `${formatDateTime(new Date(start))} to ${formatDateTime(new Date(end))}`
+      start,
+      ts: new Date().toISOString(),
+      end,
+      imei,
+      company,
+      make: unitData.make,
+      model: unitData.model,
+      regNo: unitData.regNo,
+      firstname,
+      genDate: formatDateTime(currentDate),
+      range: `${formatDateTime(new Date(start))} to ${formatDateTime(new Date(end))}`
     }));
 
     const path = `https://clientdashboard.trak24.in/media/reports?data=${serializedArray}`;
 
-    
 
-    if (emailSend===true && emailAddresses.length > 0) {
-        console.log("email sending");
-        
-        for (const email of emailAddresses) {
-           await sendReports(email, path);
-        }
+
+    if (emailSend === true && emailAddresses.length > 0) {
+      console.log("email sending");
+
+      for (const email of emailAddresses) {
+        await sendReports(email, path);
+      }
     }
 
     if (directDown) {
-        res.status(200).json({ message: 'Report generated successfully', path });
-   }else{
-    res.status(200).json({ message: 'Report email sent successfully' });
-   }
+      res.status(200).json({ message: 'Report generated successfully', path });
+    } else {
+      res.status(200).json({ message: 'Report email sent successfully' });
+    }
 
-} catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
-}
+  }
 };
 
+
+
+export const GenerateReport = async (req, res) => {
+  try {
+    const { startDate, endDate, imei } = req.params;
+    if (!startDate || !endDate || !imei) {
+      return res.status(400).json({ success: false, message: 'Missing required parameters.' });
+    } else {
+      const start = parseDate(startDate);
+      const end = parseDate(endDate);
+
+      if (!start || !end) {
+        return res.status(400).json({ success: false, message: 'Invalid date format. Use DD-MM-YYYY.' });
+      }
+
+      console.log(start, end);
+
+      const results = await Units.find({
+        imei: imei,
+        "reports.startDate": { $exists: true }
+      });
+
+      if (!results.length) {
+        return res.status(404).json({ success: false, message: 'No reports found.' });
+      }
+
+      // Filter reports array within the date range
+      const filteredReports = results.map(doc => ({
+        ...doc.toObject(),
+        reports: doc.reports.filter(report =>
+          report.startDate >= start && report.startDate <= end
+        ),
+      }));
+      const unitdata = await GetReportUnitData(imei)
+      const path = await BuildReport(filteredReports, unitdata, startDate, endDate);
+      console.log(path);
+
+      res.status(200).json({ success: true, path: path });
+    }
+
+
+  } catch (error) {
+    console.error("Error fetching reports:", error.message);
+    res.status(500).json({ success: false, message: 'Could not generate reports. Ensure the inputs are correct.' });
+  }
+}
+
+
+
+
 const sendReports = async (email, pdfPath) => {
-  const layout=`
+  const layout = `
   <!DOCTYPE html>
 <html>
 <head>
@@ -398,17 +487,17 @@ const sendReports = async (email, pdfPath) => {
 </html>
   `
   const mailOptions = {
-      from: 'noreply.trak24@gmail.com',
-      to: email,
-      subject: 'Trip Report - Trak24',
-      html: layout
+    from: 'noreply.trak24@gmail.com',
+    to: email,
+    subject: 'Trip Report - Trak24',
+    html: layout
   };
 
   try {
-      await Transporter.sendMail(mailOptions);
-      console.log("Email sent successfully!");
+    await Transporter.sendMail(mailOptions);
+    console.log("Email sent successfully!");
   } catch (error) {
-      console.error("Email Sending Error:", error);
-      throw new Error("Failed to send email");
+    console.error("Email Sending Error:", error);
+    throw new Error("Failed to send email");
   }
 };

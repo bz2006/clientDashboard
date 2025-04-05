@@ -71,6 +71,7 @@ function GetReports() {
 
   const res=getAssetDetailsByIMEI()
   const arrayData = {imei:Asset,start:start,end:end, company: decryptData().company,make:res.assetMake,model:res.assetModel,regNo:res.assetRegNo, firstname: decryptData().firstname,genDate:`${formatDateTime(today)}`, range: `${formatDateTime(new Date(start))} to ${formatDateTime(new Date(end))}` };
+console.log(arrayData);
 
 
   const serializedArray = encodeURIComponent(JSON.stringify(arrayData));

@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -19,6 +20,7 @@
     "moongoose": "^0.0.5",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pdfkit": "^0.16.0"
   }
 }
