@@ -35,7 +35,6 @@ export const BuildReport=async(data,unitData,start,end)=>{
             genDate: formatDateTime(currentDate),
             firstname: unitData.firstname
           };
-          
         const res=await processReportData(data[0].reports)
         console.log(__dirname);
         const outputPath = path.join(__dirname, "trip-report.pdf"); // or any desired filename
