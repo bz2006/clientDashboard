@@ -231,63 +231,68 @@ export const GetReportUnitData = async (imei) => {
   }
 };
 
-function formatDateTime(date) {
-  const options = { day: "2-digit", month: "short", year: "numeric" }; // Format: 04 Jan 2025
-  const datePart = date.toLocaleDateString("en-US", options);
-
-  const timePart = date.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true, // Ensures AM/PM format
-  });
-
-  return `${datePart}, ${timePart}`;
-}
 
 export const GenerateAppReport = async (req, res) => {
   try {
     const currentDate = new Date(new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
     console.log(new Date().toISOString());
 
-    const { start, end, imei, company, firstname, directDown, emailSend, emailAddresses } = req.body;
-    console.log("report gen data", start, end, imei, company, firstname, directDown, emailSend, emailAddresses);
+    const { startDate, endDate, imei, company, firstname, directDown, emailSend, emailAddresses } = req.body;
+    if (!start || !endDate || !imei) {
+      return res.status(400).json({ success: false, message: 'Missing required parameters.' });
+    } else {
+      const start = parseDate(startDate);
+      const end = parseDate(endDate);
 
-    const unitData = await GetReportUnitData(imei);
-    if (!unitData) {
-      return res.status(400).json({ error: "Unit data not found" });
-    }
+      if (!start || !end) {
+        return res.status(400).json({ success: false, message: 'Invalid date format. Use DD-MM-YYYY.' });
+      }
 
-    const serializedArray = encodeURIComponent(JSON.stringify({
-      start,
-      ts: new Date().toISOString(),
-      end,
-      imei,
-      company,
-      make: unitData.make,
-      model: unitData.model,
-      regNo: unitData.regNo,
-      firstname,
-      genDate: formatDateTime(currentDate),
-      range: `${formatDateTime(new Date(start))} to ${formatDateTime(new Date(end))}`
-    }));
+      const results = await Units.find({
+        imei: imei,
+        "reports.startDate": { $exists: true }
+      });
 
-    const path = `https://clientdashboard.trak24.in/media/reports?data=${serializedArray}`;
+      if (!results.length) {
+        return res.status(404).json({ success: false, message: 'No reports found.' });
+      }
 
+      // Filter reports array within the date range
+      const filteredReports = results.map(doc => ({
+        ...doc.toObject(),
+        reports: doc.reports.filter(report =>
+          report.startDate >= start && report.startDate <= end
+        ),
+      }));
+      const unitdata = await GetReportUnitData(imei)
+      const path = await BuildReport(filteredReports, unitdata, startDate, endDate);
+      console.log(path);
+      const newMedia = new StaticMedia({
+        file: path.fileName,
+        time: new Date(),
+      });
+      await newMedia.save();
 
+     const url=path.path
 
-    if (emailSend === true && emailAddresses.length > 0) {
-      console.log("email sending");
-
-      for (const email of emailAddresses) {
-        await sendReports(email, path);
+      if (emailSend === true && emailAddresses.length > 0) {
+        console.log("email sending");
+  
+        for (const email of emailAddresses) {
+          await sendReports(email, url);
+        }
+      }
+  
+      if (directDown) {
+        res.status(200).json({ message: 'Report generated successfully', path });
+      } else {
+        res.status(200).json({ message: 'Report email sent successfully' });
       }
     }
 
-    if (directDown) {
-      res.status(200).json({ message: 'Report generated successfully', path });
-    } else {
-      res.status(200).json({ message: 'Report email sent successfully' });
-    }
+
+
+   
 
   } catch (error) {
     console.error(error);
@@ -480,7 +485,7 @@ const sendReports = async (email, pdfPath) => {
         
         <div class="content">
             <p>Hello,</p>
-            <p>Your daily trip report has been processed and is ready for download. You can view all your travel details, routes, and analysis in this comprehensive report.</p>
+            <p>Your daily trip report has been processed and is ready for download. You can view all your travel details, routes, and analysis in this comprehensive report. The download link will be expired in 1 hour.</p>
             <p>Click the button below to Generate & download your report:</p>
             <a href="${pdfPath}" class="button">Generate & Download Trip Report</a>
         </div>
