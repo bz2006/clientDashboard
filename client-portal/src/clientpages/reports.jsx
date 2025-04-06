@@ -87,6 +87,7 @@ const downloadFile = (url) => {
   anchor.click();
   document.body.removeChild(anchor);
 };
+
 const GetReports=async()=>{
 try {
   const res = await axios.get(`/api-trkclt/generate-reports/${start}/${end}/${Asset}`);
