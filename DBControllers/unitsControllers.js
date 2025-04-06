@@ -6,6 +6,7 @@ import ReportPath from '../models/ReportPathModel.js';
 import nodemailer from 'nodemailer';
 import { Transporter } from '../helpers/mailTransporter.js';
 import { BuildReport } from '../helpers/reportGen.js';
+import StaticMedia from '../models/StaticMediaModel.js';
 
 
 
@@ -330,8 +331,13 @@ export const GenerateReport = async (req, res) => {
       const unitdata = await GetReportUnitData(imei)
       const path = await BuildReport(filteredReports, unitdata, startDate, endDate);
       console.log(path);
+      const newMedia = new StaticMedia({
+        file: path.fileName,
+        time: new Date(),
+      });
+      await newMedia.save();
 
-      res.status(200).json({ success: true, path: path });
+      res.status(200).json({ success: true, path: path.path });
     }
 
 
