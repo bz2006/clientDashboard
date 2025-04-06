@@ -86,8 +86,8 @@ export const getExpiredUnitsDetails = async () => {
 const UPLOAD_DIR = '/var/www/static-media/uploads';
 
 export const deleteExpiredStaticMedia = async () => {
-  //const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-  const oneHourAgo = new Date(Date.now() - 5 * 60 * 1000);
+const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+ // const oneHourAgo = new Date(Date.now() - 5 * 60 * 1000);//5min
   try {
     // Find records older than 1 hour
     const expiredMedia = await StaticMedia.find({ time: { $lt: oneHourAgo } });

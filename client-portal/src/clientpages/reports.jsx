@@ -62,20 +62,36 @@ function formatDateTime(date) {
 }
 
 
-function GetReports() {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1.
-  const day = String(today.getDate()).padStart(2, '0');
-  const date = `${year}-${month}-${day}`;
+// function GetReports() {
+//   const today = new Date();
+//   const year = today.getFullYear();
+//   const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1.
+//   const day = String(today.getDate()).padStart(2, '0');
+//   const date = `${year}-${month}-${day}`;
 
-  const res=getAssetDetailsByIMEI()
-  const arrayData = {imei:Asset,start:start,end:end, company: decryptData().company,make:res.assetMake,model:res.assetModel,regNo:res.assetRegNo, firstname: decryptData().firstname,genDate:`${formatDateTime(today)}`, range: `${formatDateTime(new Date(start))} to ${formatDateTime(new Date(end))}` };
-console.log(arrayData);
+//   const res=getAssetDetailsByIMEI()
+//   const arrayData = {imei:Asset,start:start,end:end, company: decryptData().company,make:res.assetMake,model:res.assetModel,regNo:res.assetRegNo, firstname: decryptData().firstname,genDate:`${formatDateTime(today)}`, range: `${formatDateTime(new Date(start))} to ${formatDateTime(new Date(end))}` };
+// console.log(arrayData);
 
 
-  const serializedArray = encodeURIComponent(JSON.stringify(arrayData));
- window.open(`/reports-center/viewer?array=${serializedArray}`, '_blank');
+//   const serializedArray = encodeURIComponent(JSON.stringify(arrayData));
+//  window.open(`/reports-center/viewer?array=${serializedArray}`, '_blank');
+
+// }
+
+const GetReports=async()=>{
+try {
+  const res = await axios.get(`/api-trkclt/generate-reports/${start}/${end}/${Asset}`);
+        if (res.status === 200) {
+            console.log(res);
+            
+        } else {
+            console.log("Empty data received");
+        }
+} catch (error) {
+  console.log(error.message);
+  
+}
 
 }
 

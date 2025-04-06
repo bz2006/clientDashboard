@@ -335,7 +335,10 @@ export const GenerateReport = async (req, res) => {
       });
       await newMedia.save();
 
-      res.status(200).json({ success: true, path: path.path });
+      res.status(200).json({
+        success: true,
+        downloadUrl:path.path, // return the full file URL
+      });
     }
 
 

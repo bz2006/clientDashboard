@@ -14,7 +14,6 @@ import { deleteExpiredStaticMedia, deleteShortTrips, getExpiredUnitsDetails } fr
 // });
 
 cron.schedule('*/2 * * * *', async () => {
-  console.log("doing cron job");
   await deleteExpiredStaticMedia()
 });
 
