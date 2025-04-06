@@ -83,7 +83,7 @@ const GetReports=async()=>{
 try {
   const res = await axios.get(`/api-trkclt/generate-reports/${start}/${end}/${Asset}`);
         if (res.status === 200) {
-            console.log(res);
+          window.open(res.data.downloadUrl, '_blank');
             
         } else {
             console.log("Empty data received");
