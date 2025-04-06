@@ -78,12 +78,20 @@ function formatDateTime(date) {
 //  window.open(`/reports-center/viewer?array=${serializedArray}`, '_blank');
 
 // }
-
+const triggerFileDownload = (url) => {
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', ''); // Let the browser handle file name
+  link.setAttribute('target', '_blank'); // Optional
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 const GetReports=async()=>{
 try {
   const res = await axios.get(`/api-trkclt/generate-reports/${start}/${end}/${Asset}`);
         if (res.status === 200) {
-          window.open(res.data.downloadUrl, '_blank');
+          triggerFileDownload(res.data.downloadUrl);
             
         } else {
             console.log("Empty data received");
