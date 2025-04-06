@@ -238,7 +238,7 @@ export const GenerateAppReport = async (req, res) => {
     console.log(new Date().toISOString());
 
     const { startDate, endDate, imei, company, firstname, directDown, emailSend, emailAddresses } = req.body;
-    if (!start || !endDate || !imei) {
+    if (!startDate || !endDate || !imei) {
       return res.status(400).json({ success: false, message: 'Missing required parameters.' });
     } else {
       const start = parseDate(startDate);
@@ -284,7 +284,7 @@ export const GenerateAppReport = async (req, res) => {
       }
   
       if (directDown) {
-        res.status(200).json({ message: 'Report generated successfully', path });
+        res.status(200).json({ message: 'Report generated successfully', url });
       } else {
         res.status(200).json({ message: 'Report email sent successfully' });
       }
