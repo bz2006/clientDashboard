@@ -1,8 +1,10 @@
 import { Transporter } from "../helpers/mailTransporter.js";
 import ReportPath from "../models/ReportPathModel.js";
+import StaticMedia from "../models/StaticMediaModel.js";
 import UnitsModel from "../models/UnitsModel.js";
 import userModel from "../models/userModel.js";
-
+import fs from 'fs';
+import path from 'path';
 
 export const deleteShortTrips = async () => {
     try {
@@ -78,6 +80,39 @@ export const getExpiredUnitsDetails = async () => {
       throw error;
     }
   };
+
+
+
+const UPLOAD_DIR = '/var/www/static-media/uploads';
+
+export const deleteExpiredStaticMedia = async () => {
+  //const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+  const oneHourAgo = new Date(Date.now() - 5 * 60 * 1000);
+  try {
+    // Find records older than 1 hour
+    const expiredMedia = await StaticMedia.find({ time: { $lt: oneHourAgo } });
+
+    for (const media of expiredMedia) {
+      const filePath = path.join(UPLOAD_DIR, media.file);
+
+      // Delete file if exists
+      fs.unlink(filePath, (err) => {
+        if (err && err.code !== 'ENOENT') {
+          console.error(`Error deleting file ${filePath}:`, err);
+        } else {
+          console.log(`Deleted file: ${filePath}`);
+        }
+      });
+
+      // Delete DB record
+      await StaticMedia.deleteOne({ _id: media._id });
+      console.log(`Deleted DB record: ${media._id}`);
+    }
+  } catch (error) {
+    console.error('Error during media cleanup:', error);
+  }
+};
+
 
 
 const ExpiredMail = async (email, assetInfo) => {

@@ -310,8 +310,6 @@ export const GenerateReport = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Invalid date format. Use DD-MM-YYYY.' });
       }
 
-      console.log(start, end);
-
       const results = await Units.find({
         imei: imei,
         "reports.startDate": { $exists: true }

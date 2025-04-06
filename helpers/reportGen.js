@@ -38,12 +38,13 @@ export const BuildReport = async (data, unitData, start, end) => {
     const res = await processReportData(data[0].reports)
     const namePart = unitData.company || unitData.firstname;
     const datePart = formatDateTime(new Date(end));
-    const cleanName = namePart.replace(/\s+/g, '');
-    const cleanDate = datePart.replace(/\s+/g, '');
-    const fileName = `${cleanName}_${cleanDate}_trip-report.pdf`;
+    const cleanName = namePart.replace(/[\s,]+/g, '');
+    const cleanDate = datePart.replace(/[\s,]+/g, '');
+    const uniqueId = Date.now().toString().slice(-4);
+    const fileName = `${cleanName}_${cleanDate}_${uniqueId}_trip-report.pdf`;
     const outputPath = path.join("/var/www/static-media/uploads", fileName);
     generateTripReport(res, Essentials, outputPath);
-    return {path:`http://static-media.trak24.in/uploads/${fileName}`,fileName:fileName};
+    return { path: `http://static-media.trak24.in/uploads/${fileName}`, fileName: fileName };
 
   } catch (error) {
     console.log(error);
