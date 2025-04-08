@@ -166,9 +166,10 @@ export const generateTripReport = (reports, essentials, outputPath) => {
           const headerHeight = 100;
           
           // Left side - Logo (smaller size as requested)
-          const logoPath = path.join(__dirname, 'logo.png');
-          if (fs.existsSync("./logo.png")) {
-            doc.image(logoPath, doc.page.margins.left + 15, doc.page.margins.top, { height: 40 });
+        const logoPath = path.join(__dirname, 'logo.png');
+
+if (fs.existsSync(logoPath)) {
+  doc.image(logoPath, doc.page.margins.left + 15, doc.page.margins.top, { height: 40 });
           } else {
             // If logo doesn't exist, draw a placeholder
             doc.rect(doc.page.margins.left + 15, doc.page.margins.top, 120, 40)
@@ -207,6 +208,7 @@ export const generateTripReport = (reports, essentials, outputPath) => {
           
           // Logo (smaller)
           const logoPath = path.join(__dirname, 'logo.png');
+
           if (fs.existsSync(logoPath)) {
             doc.image(logoPath, doc.page.margins.left + 10, doc.page.margins.top - 5, { height: 25 });
           } else {
