@@ -237,7 +237,7 @@ export const GenerateAppReport = async (req, res) => {
     const currentDate = new Date(new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
     console.log(new Date().toISOString());
 
-    const { startDate, endDate, imei, company, firstname, directDown, emailSend, emailAddresses } = req.body;
+    const { startDate, endDate, imei, directDown, emailSend, emailAddresses } = req.body;
     if (!startDate || !endDate || !imei) {
       return res.status(400).json({ success: false, message: 'Missing required parameters.' });
     } else {

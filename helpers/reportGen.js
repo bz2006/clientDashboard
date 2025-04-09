@@ -44,7 +44,7 @@ export const BuildReport = async (data, unitData, start, end) => {
     const fileName = `${cleanName}_${cleanDate}_${uniqueId}_trip-report.pdf`;
     const outputPath = path.join("/var/www/static-media/uploads", fileName);
     generateTripReport(res, Essentials, outputPath);
-    return { path: `https://static-media.bezoft.com/uploads/${fileName}`, fileName: fileName };
+    return { path: `https://static-media.trak24.in/uploads/${fileName}`, fileName: fileName };
 
   } catch (error) {
     console.log(error);
