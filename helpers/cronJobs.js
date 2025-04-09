@@ -13,8 +13,8 @@ import { deleteExpiredStaticMedia, deleteShortTrips, getExpiredUnitsDetails } fr
   
 // });
 
-cron.schedule('*/2 * * * *', async () => {
-  await deleteExpiredStaticMedia()
-});
+// cron.schedule('*/2 * * * *', async () => {
+//   await deleteExpiredStaticMedia()
+// });
 
 export default cron;
