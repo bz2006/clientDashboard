@@ -280,6 +280,7 @@ export const generateTripReport = (reports, essentials, outputPath) => {
       // Generate report with improved pagination
       let pageNum = 1;
       let processedRows = 0;
+      let lastTableBottom = 0; // Track the bottom position of the last table drawn
       
       // First page
       let yPos = addHeader(true);
@@ -288,6 +289,7 @@ export const generateTripReport = (reports, essentials, outputPath) => {
       // Draw first page table if there's data
       if (reports.length > 0) {
         const result = drawTable(reports.slice(0, rowsPerPage), yPos, rowsPerPage);
+        lastTableBottom = result.newY; // Update the bottom position
         addFooter(pageNum);
         processedRows += result.rowsDrawn;
       }
@@ -306,6 +308,7 @@ export const generateTripReport = (reports, essentials, outputPath) => {
         
         // Draw table with remaining data, up to rowsPerPage
         const result = drawTable(reports.slice(processedRows, processedRows + rowsPerPage), yPos, rowsPerPage);
+        lastTableBottom = result.newY; // Update the bottom position
         addFooter(pageNum);
         
         // If no rows were drawn on this page, we might have an issue with space calculation
@@ -318,62 +321,26 @@ export const generateTripReport = (reports, essentials, outputPath) => {
       }
 
       // Add statistics section on the last page
-      const lastPageY = doc._y || yPos;
+      // Use lastTableBottom to position the stats section properly below the last table
+      const statsY = lastTableBottom + 40; // Add 40px padding after the table
       
-      // Only add stats if there's enough space, otherwise add a new page
-      if (lastPageY + 180 > doc.page.height - doc.page.margins.bottom - 40) {
+      // Check if there's enough space for the stats section
+      if (statsY + 180 > doc.page.height - doc.page.margins.bottom - 40) {
+        // Not enough space, add a new page for stats
         doc.addPage();
         pageNum++;
         addHeader(false);
         addFooter(pageNum);
-        yPos = doc._y || (doc.page.margins.top + 40);
+        // Reset statsY to be after the header on the new page
+        const newPageHeaderY = doc.page.margins.top + 30;
+        const statsYOnNewPage = newPageHeaderY + 40; // Add some padding after header
+        
+        // Add stats section on the new page
+        addStatsSectionToPage(doc, statsYOnNewPage, reports, styles);
+      } else {
+        // Enough space, add stats on the current page
+        addStatsSectionToPage(doc, statsY, reports, styles);
       }
-      
-      // Calculate summary statistics
-      const totalDistance = reports.reduce((sum, record) => sum + parseFloat(record.distance || 0), 0);
-      const totalDuration = reports.reduce((sum, record) => {
-        const durationParts = record.duration.match(/(\d+)h\s*(\d+)m/);
-        if (durationParts) {
-          return sum + (parseInt(durationParts[1]) * 60) + parseInt(durationParts[2]);
-        }
-        return sum;
-      }, 0);
-      
-      // Format total duration
-      const durationHours = Math.floor(totalDuration / 60);
-      const durationMinutes = totalDuration % 60;
-      const formattedDuration = `${durationHours}h ${durationMinutes}m`;
-      
-      // Modern stats layout with no background
-      const statsY = yPos + 40;
-      const statsWidth = 300;
-      const statsX = doc.page.margins.left + (doc.page.width - doc.page.margins.left - doc.page.margins.right - statsWidth) / 2;
-      
-      // Title with bottom border
-      doc.fontSize(16).font(styles.fonts.title).fillColor(styles.colors.primary)
-         .text('TRIP SUMMARY', statsX, statsY, { width: statsWidth, align: 'center' });
-      
-      // Add thin line separator
-      doc.moveTo(statsX + 20, statsY + 30)
-         .lineTo(statsX + statsWidth - 20, statsY + 30)
-         .stroke(styles.colors.primary);
-      
-      // Stats with more spacing and cleaner layout
-      const statY1 = statsY + 50;
-      const statY2 = statY1 + 25;
-      const statY3 = statY2 + 25;
-      
-      // Labels (left aligned)
-      doc.fontSize(12).font(styles.fonts.body).fillColor(styles.colors.dark)
-         .text('Total Trips:', statsX, statY1)
-         .text('Total Distance:', statsX, statY2)
-         .text('Total Duration:', statsX, statY3);
-      
-      // Values (right aligned)
-      doc.fontSize(12).font(styles.fonts.title).fillColor(styles.colors.primary)
-         .text(`${reports.length}`, statsX + 140, statY1, { width: statsWidth - 140, align: 'right' })
-         .text(`${totalDistance.toFixed(1)} km`, statsX + 140, statY2, { width: statsWidth - 140, align: 'right' })
-         .text(`${formattedDuration}`, statsX + 140, statY3, { width: statsWidth - 140, align: 'right' });
 
       // Finalize the PDF
       doc.end();
@@ -382,3 +349,50 @@ export const generateTripReport = (reports, essentials, outputPath) => {
     }
   });
 };
+
+// Helper function to add stats section to any page
+function addStatsSectionToPage(doc, statsY, reports, styles) {
+  const statsWidth = 300;
+  const statsX = doc.page.margins.left + (doc.page.width - doc.page.margins.left - doc.page.margins.right - statsWidth) / 2;
+  
+  // Title with bottom border
+  doc.fontSize(16).font(styles.fonts.title).fillColor(styles.colors.primary)
+     .text('TRIP SUMMARY', statsX, statsY, { width: statsWidth, align: 'center' });
+  
+  // Add thin line separator
+  doc.moveTo(statsX + 20, statsY + 30)
+     .lineTo(statsX + statsWidth - 20, statsY + 30)
+     .stroke(styles.colors.primary);
+  
+  // Calculate summary statistics
+  const totalDistance = reports.reduce((sum, record) => sum + parseFloat(record.distance || 0), 0);
+  const totalDuration = reports.reduce((sum, record) => {
+    const durationParts = record.duration.match(/(\d+)h\s*(\d+)m/);
+    if (durationParts) {
+      return sum + (parseInt(durationParts[1]) * 60) + parseInt(durationParts[2]);
+    }
+    return sum;
+  }, 0);
+  
+  // Format total duration
+  const durationHours = Math.floor(totalDuration / 60);
+  const durationMinutes = totalDuration % 60;
+  const formattedDuration = `${durationHours}h ${durationMinutes}m`;
+  
+  // Stats with more spacing and cleaner layout
+  const statY1 = statsY + 50;
+  const statY2 = statY1 + 25;
+  const statY3 = statY2 + 25;
+  
+  // Labels (left aligned)
+  doc.fontSize(12).font(styles.fonts.body).fillColor(styles.colors.dark)
+     .text('Total Trips:', statsX, statY1)
+     .text('Total Distance:', statsX, statY2)
+     .text('Total Duration:', statsX, statY3);
+  
+  // Values (right aligned)
+  doc.fontSize(12).font(styles.fonts.title).fillColor(styles.colors.primary)
+     .text(`${reports.length}`, statsX + 140, statY1, { width: statsWidth - 140, align: 'right' })
+     .text(`${totalDistance.toFixed(1)} km`, statsX + 140, statY2, { width: statsWidth - 140, align: 'right' })
+     .text(`${formattedDuration}`, statsX + 140, statY3, { width: statsWidth - 140, align: 'right' });
+}
