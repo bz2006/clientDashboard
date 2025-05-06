@@ -54,8 +54,9 @@ export const generateTripReport = (reports, essentials, outputPath) => {
 
       // Helper function to calculate text height
       const calculateTextHeight = (text, fontSize, fontFamily, width) => {
+        if (!text) return 0;
         doc.fontSize(fontSize).font(fontFamily);
-        return doc.heightOfString(text, { width });
+        return doc.heightOfString(text.toString(), { width });
       };
 
       // Helper function to draw table with dynamic row heights
@@ -102,11 +103,13 @@ export const generateTripReport = (reports, essentials, outputPath) => {
         
         y += headerHeight;
         
-        // Draw data rows with dynamic heights
-        const start = 0;
-        const end = Math.min(start + rowLimit, data.length);
+        // Track rows that were actually drawn
+        let rowsDrawn = 0;
         
-        for (let i = start; i < end; i++) {
+        // Draw data rows with dynamic heights
+        const end = Math.min(rowLimit, data.length);
+        
+        for (let i = 0; i < end; i++) {
           const row = data[i];
           let maxRowHeight = 0;
           
@@ -134,6 +137,11 @@ export const generateTripReport = (reports, essentials, outputPath) => {
           
           maxRowHeight = Math.max(maxRowHeight, 30); // Minimum row height
           
+          // Check if this row will fit on the current page
+          if (y + maxRowHeight > doc.page.height - doc.page.margins.bottom - 40) {
+            break; // This row won't fit, so stop
+          }
+          
           // Draw cell contents
           x = doc.page.margins.left;
           values.forEach((value, j) => {
@@ -152,9 +160,10 @@ export const generateTripReport = (reports, essentials, outputPath) => {
           });
           
           y += maxRowHeight;
+          rowsDrawn++;
         }
         
-        return y; // Return the Y position after the table
+        return { newY: y, rowsDrawn }; // Return the Y position after the table and number of rows drawn
       };
 
       // Function to add modern header to pages
@@ -166,10 +175,10 @@ export const generateTripReport = (reports, essentials, outputPath) => {
           const headerHeight = 100;
           
           // Left side - Logo (smaller size as requested)
-        const logoPath = path.join(__dirname, 'logo.png');
+          const logoPath = path.join(__dirname, 'logo.png');
 
-if (fs.existsSync(logoPath)) {
-  doc.image(logoPath, doc.page.margins.left + 15, doc.page.margins.top, { height: 40 });
+          if (fs.existsSync(logoPath)) {
+            doc.image(logoPath, doc.page.margins.left + 15, doc.page.margins.top, { height: 40 });
           } else {
             // If logo doesn't exist, draw a placeholder
             doc.rect(doc.page.margins.left + 15, doc.page.margins.top, 120, 40)
@@ -219,9 +228,9 @@ if (fs.existsSync(logoPath)) {
                .text('TRAK24', doc.page.margins.left + 25, doc.page.margins.top + 3);
           }
           
-          // Page title
+          // Page title - Use correct page number
           doc.fontSize(10).font(styles.fonts.subtitle).fillColor(styles.colors.dark)
-             .text(`${essentials.regNo} - Trip Report (Page ${doc.bufferedPageRange().count})`, 
+             .text(`${essentials.regNo} - Trip Report`, 
                   doc.page.width - doc.page.margins.right - 200, doc.page.margins.top + 5, 
                   { align: 'right' });
           
@@ -253,31 +262,34 @@ if (fs.existsSync(logoPath)) {
            .text('Trak24.com Report Center', doc.page.margins.left + pageWidth / 2 - 50, footerY + 6);
       };
 
-      // Calculate dynamic row limits based on available space and content
-      const getRowLimitForPage = (contentStart, isFirstPage) => {
+      // Calculate how many rows will fit on a single page
+      const calculateRowsPerPage = (startY, isFirstPage) => {
         const pageHeight = doc.page.height;
-        const footerSpace = 40; // Space reserved for footer
-        const availableHeight = pageHeight - contentStart - doc.page.margins.bottom - footerSpace;
-        const avgRowHeight = 40; // Average estimated row height
+        const footerSpace = 40; // Space for footer
+        const availableHeight = pageHeight - startY - doc.page.margins.bottom - footerSpace;
         
-        // Return a conservative estimate
-        const limit = Math.floor(availableHeight / avgRowHeight);
-        return Math.max(1, limit); // Ensure at least one row per page
+        // Estimate average row height - be conservative to avoid overflowing
+        const avgRowHeight = 35; // Average row height based on your data
+        const headerHeight = 30; // Height of table header
+        
+        // Calculate max rows that will fit
+        const maxRows = Math.floor((availableHeight - headerHeight) / avgRowHeight);
+        return Math.max(1, maxRows); // Ensure at least 1 row per page
       };
       
-      // Generate report with dynamic row limits
+      // Generate report with improved pagination
       let pageNum = 1;
       let processedRows = 0;
       
       // First page
       let yPos = addHeader(true);
-      let firstPageRowLimit = getRowLimitForPage(yPos, true);
-      let currentPageData = reports.slice(0, firstPageRowLimit);
+      let rowsPerPage = calculateRowsPerPage(yPos, true);
       
-      if (currentPageData.length > 0) {
-        yPos = drawTable(currentPageData, yPos, currentPageData.length);
+      // Draw first page table if there's data
+      if (reports.length > 0) {
+        const result = drawTable(reports.slice(0, rowsPerPage), yPos, rowsPerPage);
         addFooter(pageNum);
-        processedRows += currentPageData.length;
+        processedRows += result.rowsDrawn;
       }
 
       // Generate subsequent pages if needed
@@ -289,70 +301,79 @@ if (fs.existsSync(logoPath)) {
         // Add header to the new page
         yPos = addHeader(false);
         
-        // Calculate dynamic row limit for this page
-        let pageRowLimit = getRowLimitForPage(yPos, false);
+        // Calculate max rows for this page
+        rowsPerPage = calculateRowsPerPage(yPos, false);
         
-        // Calculate slice indices for this page
-        const remainingRows = reports.length - processedRows;
-        const rowsForThisPage = Math.min(pageRowLimit, remainingRows);
-        currentPageData = reports.slice(processedRows, processedRows + rowsForThisPage);
+        // Draw table with remaining data, up to rowsPerPage
+        const result = drawTable(reports.slice(processedRows, processedRows + rowsPerPage), yPos, rowsPerPage);
+        addFooter(pageNum);
         
-        // Draw table with the subset of data
-        if (currentPageData.length > 0) {
-          yPos = drawTable(currentPageData, yPos, currentPageData.length);
-          addFooter(pageNum);
-          processedRows += currentPageData.length;
+        // If no rows were drawn on this page, we might have an issue with space calculation
+        // Break to avoid infinite loop
+        if (result.rowsDrawn === 0) {
+          break;
         }
+        
+        processedRows += result.rowsDrawn;
       }
 
-      // Add statistics section on the last page if space permits
-      if (yPos + 150 < doc.page.height - doc.page.margins.bottom - 40) {
-        // Calculate summary statistics
-        const totalDistance = reports.reduce((sum, record) => sum + parseFloat(record.distance || 0), 0);
-        const totalDuration = reports.reduce((sum, record) => {
-          const durationParts = record.duration.match(/(\d+)h\s*(\d+)m/);
-          if (durationParts) {
-            return sum + (parseInt(durationParts[1]) * 60) + parseInt(durationParts[2]);
-          }
-          return sum;
-        }, 0);
-        
-        // Format total duration
-        const durationHours = Math.floor(totalDuration / 60);
-        const durationMinutes = totalDuration % 60;
-        const formattedDuration = `${durationHours}h ${durationMinutes}m`;
-        
-        // Modern stats layout with no background
-        const statsY = yPos + 40;
-        const statsWidth = 300;
-        const statsX = doc.page.margins.left + (doc.page.width - doc.page.margins.left - doc.page.margins.right - statsWidth) / 2;
-        
-        // Title with bottom border
-        doc.fontSize(16).font(styles.fonts.title).fillColor(styles.colors.primary)
-           .text('TRIP SUMMARY', statsX, statsY, { width: statsWidth, align: 'center' });
-        
-        // Add thin line separator
-        doc.moveTo(statsX + 20, statsY + 30)
-           .lineTo(statsX + statsWidth - 20, statsY + 30)
-           .stroke(styles.colors.primary);
-        
-        // Stats with more spacing and cleaner layout
-        const statY1 = statsY + 50;
-        const statY2 = statY1 + 25;
-        const statY3 = statY2 + 25;
-        
-        // Labels (left aligned)
-        doc.fontSize(12).font(styles.fonts.body).fillColor(styles.colors.dark)
-           .text('Total Trips:', statsX, statY1)
-           .text('Total Distance:', statsX, statY2)
-           .text('Total Duration:', statsX, statY3);
-        
-        // Values (right aligned)
-        doc.fontSize(12).font(styles.fonts.title).fillColor(styles.colors.primary)
-           .text(`${reports.length}`, statsX + 140, statY1, { width: statsWidth - 140, align: 'right' })
-           .text(`${totalDistance.toFixed(1)} km`, statsX + 140, statY2, { width: statsWidth - 140, align: 'right' })
-           .text(`${formattedDuration}`, statsX + 140, statY3, { width: statsWidth - 140, align: 'right' });
+      // Add statistics section on the last page
+      const lastPageY = doc._y || yPos;
+      
+      // Only add stats if there's enough space, otherwise add a new page
+      if (lastPageY + 180 > doc.page.height - doc.page.margins.bottom - 40) {
+        doc.addPage();
+        pageNum++;
+        addHeader(false);
+        addFooter(pageNum);
+        yPos = doc._y || (doc.page.margins.top + 40);
       }
+      
+      // Calculate summary statistics
+      const totalDistance = reports.reduce((sum, record) => sum + parseFloat(record.distance || 0), 0);
+      const totalDuration = reports.reduce((sum, record) => {
+        const durationParts = record.duration.match(/(\d+)h\s*(\d+)m/);
+        if (durationParts) {
+          return sum + (parseInt(durationParts[1]) * 60) + parseInt(durationParts[2]);
+        }
+        return sum;
+      }, 0);
+      
+      // Format total duration
+      const durationHours = Math.floor(totalDuration / 60);
+      const durationMinutes = totalDuration % 60;
+      const formattedDuration = `${durationHours}h ${durationMinutes}m`;
+      
+      // Modern stats layout with no background
+      const statsY = yPos + 40;
+      const statsWidth = 300;
+      const statsX = doc.page.margins.left + (doc.page.width - doc.page.margins.left - doc.page.margins.right - statsWidth) / 2;
+      
+      // Title with bottom border
+      doc.fontSize(16).font(styles.fonts.title).fillColor(styles.colors.primary)
+         .text('TRIP SUMMARY', statsX, statsY, { width: statsWidth, align: 'center' });
+      
+      // Add thin line separator
+      doc.moveTo(statsX + 20, statsY + 30)
+         .lineTo(statsX + statsWidth - 20, statsY + 30)
+         .stroke(styles.colors.primary);
+      
+      // Stats with more spacing and cleaner layout
+      const statY1 = statsY + 50;
+      const statY2 = statY1 + 25;
+      const statY3 = statY2 + 25;
+      
+      // Labels (left aligned)
+      doc.fontSize(12).font(styles.fonts.body).fillColor(styles.colors.dark)
+         .text('Total Trips:', statsX, statY1)
+         .text('Total Distance:', statsX, statY2)
+         .text('Total Duration:', statsX, statY3);
+      
+      // Values (right aligned)
+      doc.fontSize(12).font(styles.fonts.title).fillColor(styles.colors.primary)
+         .text(`${reports.length}`, statsX + 140, statY1, { width: statsWidth - 140, align: 'right' })
+         .text(`${totalDistance.toFixed(1)} km`, statsX + 140, statY2, { width: statsWidth - 140, align: 'right' })
+         .text(`${formattedDuration}`, statsX + 140, statY3, { width: statsWidth - 140, align: 'right' });
 
       // Finalize the PDF
       doc.end();
@@ -361,4 +382,3 @@ if (fs.existsSync(logoPath)) {
     }
   });
 };
-
