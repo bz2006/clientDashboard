@@ -21,7 +21,7 @@ function formatDateTime(date) {
   return `${datePart}, ${timePart}`;
 }
 
-export const BuildReport = async (data, unitData, start, end,range) => {
+export const BuildReport = async (data, unitData, start, end) => {
   try {
     const currentDate = new Date(new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
     console.log(currentDate);
