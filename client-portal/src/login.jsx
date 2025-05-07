@@ -3,6 +3,7 @@ import { BsGlobe2, BsPersonFill, BsLockFill } from "react-icons/bs";
 import { FiLogIn } from "react-icons/fi";
 import { BiLoaderAlt } from "react-icons/bi";
 import ThemeSwitcher from './Components/themeSwitcher';
+import {message}from"antd"
 import axios from "axios"
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from './contexts/AuthContext';
@@ -26,22 +27,6 @@ function Login() {
         }
     }, []);
 
-    const HandleAdminLogin = async (d) => {
-        try {
-            setLoading(true);
-            const response = await axios.post("/api-trkclt/admcl-login", { admid: d.admid, clid: d.clid })
-            if (response.status === 200) {
-                localStorage.setItem('token', response.data?.token)
-                localStorage.setItem('user', response.data?.data.userId)
-                encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
-                window.location.href = "/home"
-            }
-        } catch (error) {
-            console.error(error)
-        } finally {
-            setLoading(false);
-        }
-    }
 
     const UpdateUsage = async () => {
         try {
@@ -66,12 +51,13 @@ function Login() {
                         localStorage.setItem('token', response.data?.token),
                         localStorage.setItem('user', response.data?.data.userId),
                         encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
-                    ])
+                    ]);
                     window.location.href = "/home"
                 }
             }
         } catch (error) {
             console.error(error)
+            message.error("Login Failed");
         } finally {
             setLoading(false);
         }

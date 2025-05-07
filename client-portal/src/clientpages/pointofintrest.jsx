@@ -47,8 +47,6 @@ function PointIntrest() {
             const res = await axios.get(`/api-trkclt/get-geofence/${Userid?Userid:user}`);
             if (res.status === 200) {
                 setData(res.data.geoFences);
-            } else {
-                console.log("Empty data received");
             }
             setloading(false)
         } catch (error) {

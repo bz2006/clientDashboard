@@ -66,7 +66,7 @@ const SupportCenter = () => {
 
         <div className="mt-20 mb-16">
           <div className="bg-white/90 backdrop-blur-sm dark:bg-[#1b1b1d] shadow-xl rounded-3xl overflow-hidden max-w-4xl mx-auto border border-gray-100 dark:border-gray-800">
-            <div className="px-8 py-5 bg-gradient-to-r from-orange-600 to-orange-800 dark:from-orange-600 dark:to-orange-900">
+            <div className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-800 dark:from-orange-600 dark:to-orange-900">
               <h2 className="text-xl font-semibold text-white">Contact Information</h2>
             </div>
             <div className="p-8">

@@ -13,10 +13,12 @@ import GeofenceChecker from '../Components/checkGeofence';
 import { DateTimeFRMT } from '../DataHelpers/Date&Time';
 import AlertRow from '../DataHelpers/caseOptions';
 import LoadingOverlay from '../Components/Loader';
+import { message } from 'antd';
 
 function CoreTracking() {
 
-    const [loading, setloading] = useState(false)
+    const [loading, setloading] = useState(false);
+    const [loadingRep, setLoadingRep] = useState(false);
     const [Data, setData] = useState([]);
     const [Geofences, setGeofences] = useState([]);
     const [userData, setuserData] = useState([]);
@@ -71,9 +73,7 @@ function CoreTracking() {
                 const alerts = res.data.units.filter(unit => unit.liveData.header !== "BSTPL$1").length;
 
                 setheaders({ total, moving, stopped, alerts });
-            } else {
-                console.log("Empty data received");
-            }
+            } 
             setloading(false)
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -94,9 +94,7 @@ function CoreTracking() {
                 const alerts = res.data.units.filter(unit => unit.liveData.header !== "BSTPL$1").length;
 
                 setheaders({ total, moving, stopped, alerts });
-            } else {
-                console.log("Empty data received");
-            }
+            } 
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -116,24 +114,21 @@ function CoreTracking() {
     }
 
 
-    function GetReportToday(imei, make, model, regNo) {
+    const GetReportToday = async (imei) => {
         const today = new Date();
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1.
         const day = String(today.getDate()).padStart(2, '0');
         const date = `${year}-${month}-${day}`;
 
-        const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
 
-        const arrayData = { start: date, end: date, imei: imei, company: userData.company, make: make, model: model, regNo: regNo, firstname: userData.firstname, genDate: `${formatDateTime(today)}`, range: `${formatDateTime(startOfDay)} to ${formatDateTime(today)}` };
-
-
-        const serializedArray = encodeURIComponent(JSON.stringify(arrayData));
-        window.open(`/reports-center/viewer?array=${serializedArray}`, '_blank');
+        await GetReports(date, date, imei);
+        // const serializedArray = encodeURIComponent(JSON.stringify(arrayData));
+        // window.open(`/reports-center/viewer?array=${serializedArray}`, '_blank');
 
     }
 
-    function GetReportYesterday(imei, make, model, regNo) {
+    const GetReportYesterday = async (imei) => {
         const today = new Date();
         today.setDate(today.getDate() - 1);
 
@@ -142,25 +137,55 @@ function CoreTracking() {
         const day = String(today.getDate()).padStart(2, '0');
 
         const date = `${year}-${month}-${day}`;
-        const todayAtMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
-
+        const todayAtMidnight = new Date();
+        todayAtMidnight.setHours(0, 0, 0, 0);
         // Get yesterday's date at 12:00 AM
         const yesterdayAtMidnight = new Date(todayAtMidnight);
         yesterdayAtMidnight.setDate(yesterdayAtMidnight.getDate() - 1);
 
-        const arrayData = { start: date, end: date, imei: imei, company: userData.company, make: make, model: model, regNo: regNo, firstname: userData.firstname, genDate: `${formatDateTime(today)}`, range: `${formatDateTime(yesterdayAtMidnight)} To: ${formatDateTime(todayAtMidnight)}` };
+        const yesyear = yesterdayAtMidnight.getFullYear();
+        const yesmonth = String(yesterdayAtMidnight.getMonth() + 1).padStart(2, '0');
+        const yesday = String(yesterdayAtMidnight.getDate()).padStart(2, '0');
 
-
-        const serializedArray = encodeURIComponent(JSON.stringify(arrayData));
-        window.open(`/reports-center/viewer?array=${serializedArray}`, '_blank');
+        const yesterday = `${yesyear}-${yesmonth}-${yesday}`;
+        await GetReports(yesterday, date, imei);
 
     }
 
-    console.log(Data);
+    const downloadFile = (url) => {
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.setAttribute('download', ''); // Let browser use server filename
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+    };
+
+    const GetReports = async (start, end, imei) => {
+        try {
+            setLoadingRep(true)
+            const res = await axios.get(`/api-trkclt/generate-reports/${start}/${end}/${imei}`);
+            if (res.status === 200) {
+                downloadFile(res.data.downloadUrl);
+
+            }
+        } catch (error) {
+            if (error.status === 404) {
+                message.error("No reports found in this date Range");
+            } else {
+                message.error("Oops! Something went wrong");
+            }
+
+        } finally { setLoadingRep(false) }
+
+    }
 
     return (
         <>
             <LoadingOverlay isLoading={loading} />
+            {loadingRep ? (
+                <LoadingOverlay report={true} isLoading={loadingRep} message={"Fetching Reports..."} />
+            ) : (null)}
             <Header />
             <div className='mt-24 flex flex-col md:flex-row justify-between items-center h-full'>
                 <div>

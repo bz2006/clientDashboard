@@ -4,6 +4,7 @@ import Modal from '../../Components/Modal';
 import { caseDescOptions } from '../../DataHelpers/caseOptions';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingOverlay from '../../Components/Loader';
+import { message } from 'antd';
 
 
 function ChangePassword({ open, onClose }) {
@@ -15,7 +16,6 @@ function ChangePassword({ open, onClose }) {
 
     const { decryptData } = useAuth();
 
-    console.log(decryptData());
 
     const id = decryptData().id
     const Change = (e) => {
@@ -31,14 +31,14 @@ function ChangePassword({ open, onClose }) {
             const response = await axios.post("/api-trkclt/verify-password", { userid: id, password: currentPassword });
 
             if (response.status === 200) {
-              //  message.success("Current Password Verified")
+               message.success("Current Password Verified")
                 setConfirmPassword(true)
             } else {
-               // message.error("Invalid Current Password")
+               message.error("Invalid Current Password")
             }
 
         } catch (error) {
-            //message.error("Invalid Current Password")
+            message.error("Invalid Current Password")
             console.error("Error adding Contact:", error);
         }
     }
@@ -51,18 +51,18 @@ function ChangePassword({ open, onClose }) {
                 const response = await axios.post(`/api-trkclt/update-user/${id}`, {password: newPassword});
 
                 if (response.status === 200) {
-                  //  message.success("Password Updated Successfully")
+                  message.success("Password Updated Successfully")
                     setCurrentPassword("")
                     setNewPassword("")
                     setCurrentPassword(false)
                     onClose()
                 }
             } catch (error) {
-               // message.error("Error while Updating Password")
+                message.error("Error while Updating Password")
                 console.error('Error saving batch:', error.response?.data?.message || error.message);
             }
         } else {
-           // message.error("Please Verify Your Current Password")
+          message.error("Please Verify Your Current Password")
         }
     };
 

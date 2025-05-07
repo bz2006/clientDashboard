@@ -38,8 +38,6 @@ function AssetsInfo() {
             const res = await axios.get(`/api-trkclt/get-units/${Userid}`);
             if (res.status === 200) {
                 setData(res.data.units);
-            } else {
-                console.log("Empty data received");
             }
             setloading(false)
         } catch (error) {
@@ -48,8 +46,6 @@ function AssetsInfo() {
         }
     };
 
-
-    console.log(Data);
 
     return (
         <>
@@ -69,13 +65,13 @@ function AssetsInfo() {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead>
                             <tr className="bg-gray-200 dark:bg-[#3b3b3b]">
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">No</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Assets</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Vehicle Reg No</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Service Started On</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Speed Limit</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Odometer</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">GPS Info</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">No</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Assets</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Vehicle Reg No</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Service Started On</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Speed Limit</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Odometer</th>
+                                <th scope="col" className="px-6 py-4 text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">GPS Info</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-[#1b1b1d] divide-y divide-gray-200 dark:divide-gray-700">

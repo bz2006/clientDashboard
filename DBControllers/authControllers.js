@@ -60,7 +60,6 @@ export const ClientLogin= async (req, res) => {
 
     res.status(200).json({ message: 'Login successful', token, data:{userId:user._id,firstname:user.firstname,company:user.company,webp:user.permissions.weblogin} });
   } catch (error) {
-    console.log(error);
     
     res.status(500).json({ message: 'Server error', error });
   }

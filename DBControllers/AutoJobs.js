@@ -30,9 +30,7 @@ export const deleteShortTrips = async () => {
                 ]);
             }
         }));
-        console.log("✅ All short-distance reports and corresponding paths have been deleted.");
     } catch (error) {
-        console.error("❌ Error deleting short trips:", error.message);
     }
 };
 
@@ -44,7 +42,6 @@ export const getExpiredUnitsDetails = async () => {
       const expiredUnits = await UnitsModel.find({ expiry: { $lt: currentDate } }).populate('customer');
   
       if (!expiredUnits.length) {
-        console.log("No expired units found.");
         return [];
       }
   

@@ -54,9 +54,7 @@ function MapTracking() {
       const res = await axios.get(`/api-trkclt/get-units/${Userid}`);
       if (res.status === 200) {
         setData(res.data.units);
-      } else {
-        console.log("Empty data received");
-      }
+      } 
       setloading(false)
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -66,9 +64,8 @@ function MapTracking() {
 
   const MapTracking = async () => {
     try {
-      console.log("Fetching LIve map Redis data");
       const res = await axios.get(`/api-trkclt/get-live/${selected}`);
-      console.log(res.data.liveData);
+      
       const liveData = res.data.liveData;
       setdod(liveData.gps_odometer)
       setselectedData(res.data.liveData);
@@ -116,12 +113,10 @@ function MapTracking() {
 
   const snapToRoads = async (lat, lng) => {
     try {
-      console.log(lat, lng, "test");
       
       const url = `https://roads.googleapis.com/v1/snapToRoads?path=${lat},${lng}&interpolate=true&key=AIzaSyDrrCc7r581apqK_RiScoY-Xm-oohyEXAg`;
       const response = await axios.get(url);
-      console.log(response);
-      
+   
       return response.data.snappedPoints ? response.data.snappedPoints[0].location : { lat, lng };
     } catch (error) {
       console.error("Error snapping to roads:", error);

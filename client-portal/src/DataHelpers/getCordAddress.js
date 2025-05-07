@@ -7,7 +7,6 @@ const GetAddress = async (lat, lon) => {
 
     return adrs.data.results[2].formatted_address;
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -28,8 +27,6 @@ export const GetReportAddress = async (lat, lon) => {
 
     return adrs.data.results[2].formatted_address;
   } catch (error) {
-    console.log(error);
-    console.log("Adrerr");
     
   }
 };
