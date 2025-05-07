@@ -200,7 +200,7 @@ export const generateTripReport = (reports, essentials, outputPath) => {
           
           // Title text centered
           doc.fontSize(16).font(styles.fonts.title).fillColor(styles.colors.primary)
-             .text(`Daily Trip Report for ${essentials.company} - ${essentials.make} ${essentials.model} (${essentials.regNo})`, 
+             .text(`Trip Report for ${essentials.company} - ${essentials.make} ${essentials.model} (${essentials.regNo})`, 
                    doc.page.margins.left, titleY, 
                    { width: pageWidth, align: 'center' });
           

@@ -8,8 +8,11 @@ const AddressCell = ({ latitude, longitude }) => {
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const response = await UpdateCordAdress(latitude, longitude)
-        setAddress(response); // Update state with the fetched address
+        const lng = localStorage.getItem("lng") || "en";
+        const response = await axios.get(`/api-trkclt/get-address/${latitude}/${longitude}/${lng}`);
+        console.log(response);
+        
+        setAddress(response.data.address); // Update state with the fetched address
       } catch (error) {
         setAddress("Unable to fetch address");
         console.error(error);
