@@ -319,8 +319,11 @@ export const GenerateReport = async (req, res) => {
         imei: imei,
         "reports.startDate": { $exists: true }
       });
+console.log(results);
 
-     
+      if (!results.length) {
+        return res.status(404).json({ success: false, message: 'No reports found.' });
+      }
 
       // Filter reports array within the date range
       const filteredReports = results.map(doc => ({
@@ -329,10 +332,9 @@ export const GenerateReport = async (req, res) => {
           report.startDate >= start && report.startDate <= end
         ),
       }));
-      if (!results.filteredReports) {
+      if (!filteredReports) {
         return res.status(404).json({ success: false, message: 'No reports found.' });
       }
-      
       const unitdata = await GetReportUnitData(imei)
       const path = await BuildReport(filteredReports, unitdata, startDate, endDate);
       console.log(path);
