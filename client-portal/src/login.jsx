@@ -36,6 +36,23 @@ function Login() {
         }
     };
 
+    const HandleAdminLogin = async (d) => {
+        try {
+            setLoading(true);
+            const response = await axios.post("/api-trkclt/admcl-login", { admid: d.admid, clid: d.clid })
+            if (response.status === 200) {
+                localStorage.setItem('token', response.data?.token)
+                localStorage.setItem('user', response.data?.data.userId)
+                encryptData({ id: response.data?.data.userId, name: response.data?.data.name, firstname: response.data?.data.firstname, company: response.data?.data.company })
+                window.location.href = "/home"
+            }
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const HandleLogin = async () => {
         try {
             setLoading(true);
