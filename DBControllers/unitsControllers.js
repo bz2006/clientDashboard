@@ -8,6 +8,7 @@ import { Transporter } from '../helpers/mailTransporter.js';
 import { BuildReport } from '../helpers/reportGen.js';
 import StaticMedia from '../models/StaticMediaModel.js';
 import axios from 'axios';
+import CordinateAdress from '../models/CordinateAdrsModel.js';
 
 
 
@@ -525,20 +526,43 @@ export const GetAddress = async (req, res) => {
   try {
     const { lat, long, lang } = req.params;
     const lng = lang|| "en";
-    const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`);
 
-    const address=adrs.data.results[2].formatted_address;
-    if (address) {
-      // Return the formatted address as the response to the client
+    const addressRecord = await CordinateAdress.findOne({ lat:lat, lon:long });
+
+    if (addressRecord) {
+      const address =addressRecord.address
       res.status(200).json({
         address
       });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'Address not found'
-      });
+    }else{
+
+      const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`);
+
+      const address=adrs.data.results[2].formatted_address;
+      if (address) {
+        // Return the formatted address as the response to the client
+        res.status(200).json({
+          address
+        });
+        const newAddress = new CordinateAdress({
+          lat:lat,
+          lon:long,
+          address,
+          lastFetched: new Date(),
+        });
+    
+        await newAddress.save();
+      } else {
+        res.status(404).json({
+          success: false,
+          message: 'Address not found'
+        });
+      }
+
     }
+
+
+    
   } catch (error) {
     console.error("Error fetching address:", error);
     res.status(500).json({
