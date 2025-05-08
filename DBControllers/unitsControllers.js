@@ -540,7 +540,7 @@ export const GetAddress = async (req, res) => {
 
       const address=adrs.data.results[2].formatted_address;
       if (address) {
-        // Return the formatted address as the response to the client
+        
         res.status(200).json({
           address
         });
@@ -561,8 +561,6 @@ export const GetAddress = async (req, res) => {
 
     }
 
-
-    
   } catch (error) {
     console.error("Error fetching address:", error);
     res.status(500).json({
