@@ -226,7 +226,8 @@ export const addDevice = async (req, res) => {
 };
 
 export const deleteDevice = async (req, res) => {
-  const { id, fcmToken } = req.body;
+  const { id } = req.params; 
+  const { fcmToken } = req.body;
 
   if (!id || !fcmToken) {
     return res.status(400).json({ message: "userId and token are required." });
