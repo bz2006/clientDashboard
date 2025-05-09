@@ -587,35 +587,62 @@ export const GetAddress = async (req, res) => {
     let existing = await CordinateAdress.findOne({ lat: roundedLat, lon: roundedLon });
     if (existing) {
       return res.status(200).json({ address: existing.address });
-    } else {
-
-      // Step 2: Fetch from Google API
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`
-      );
-      const address = response.data.results[2]?.formatted_address || response.data.results[0]?.formatted_address;
-
-      if (!address) {
-        return res.status(404).json({ success: false, message: 'Address not found' });
-      }
-
-      // Step 3: Check if this address already exists (regardless of coordinates)
-      existing = await CordinateAdress.findOne({ address });
-      if (existing) {
-        return res.status(200).json({ address: existing.address });
-      }
-
-      // Step 4: Save only if address is new
-      const newEntry = new CordinateAdress({
-        lat: roundedLat,
-        lon: roundedLon,
-        address,
-        lastFetched: new Date(),
-      });
-
-      await newEntry.save();
-      return res.status(200).json({ address });
     }
+
+    // Step 2: Try LocationIQ API
+    let address = null;
+    try {
+      const locIqResp = await axios.get(`https://us1.locationiq.com/v1/reverse`, {
+        params: {
+          key: 'pk.403a01c2beaf10922c3328109209b853',
+          lat,
+          lon: long,
+          format: 'json',
+          'accept-language': lng
+        },
+      });
+      address = locIqResp.data.display_name;
+    } catch (locIqError) {
+      console.warn('LocationIQ API failed, falling back to Google Maps');
+    }
+
+    // Step 3: If LocationIQ failed or didn't return address, try Google
+    if (!address) {
+      const googleResp = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json`,
+        {
+          params: {
+            latlng: `${lat},${long}`,
+            key: 'AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI',
+            language: lng,
+          },
+        }
+      );
+      address =
+        googleResp.data.results[2]?.formatted_address ||
+        googleResp.data.results[0]?.formatted_address;
+    }
+
+    if (!address) {
+      return res.status(404).json({ success: false, message: 'Address not found' });
+    }
+
+    // Step 4: Check if this address already exists (regardless of coordinates)
+    existing = await CordinateAdress.findOne({ address });
+    if (existing) {
+      return res.status(200).json({ address: existing.address });
+    }
+
+    // Step 5: Save new entry
+    const newEntry = new CordinateAdress({
+      lat: roundedLat,
+      lon: roundedLon,
+      address,
+      lastFetched: new Date(),
+    });
+
+    await newEntry.save();
+    return res.status(200).json({ address });
   } catch (error) {
     console.error('Error fetching address:', error);
     res.status(500).json({
@@ -624,3 +651,4 @@ export const GetAddress = async (req, res) => {
     });
   }
 };
+
