@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const mongoURI = "mongodb+srv://storgewebsolutions:pbRJ8Jb1vnWKJw9F@storge.n4ggj.mongodb.net/Trak-rec";
+const mongoURI = "mongodb://trak24-dev:Trak24Bezoftwares@148.113.44.181:24724/trak24";
 
 export const connectToDatabase = async () => {
   try {
