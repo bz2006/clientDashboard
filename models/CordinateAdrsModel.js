@@ -12,10 +12,10 @@ const localConnection = mongoose.createConnection(localDB, {
 // Define schema
 const CordinateAdrsModel = new mongoose.Schema({
   lat: {
-    type: String,
+    type: Number,
   },
   lon: {
-    type: String
+    type: Number
   },
   address: {
     type: String
@@ -24,6 +24,7 @@ const CordinateAdrsModel = new mongoose.Schema({
     type: Date
   },
 });
+CordinateAdrsModel.index({ address: 1 }, { unique: true });
 
 // Create model using the local connection
 const CordinateAdress = localConnection.model("CordinateAdress", CordinateAdrsModel);

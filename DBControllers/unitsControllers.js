@@ -275,16 +275,16 @@ export const GenerateAppReport = async (req, res) => {
       });
       await newMedia.save();
 
-     const url=path.path
+      const url = path.path
 
       if (emailSend === true && emailAddresses.length > 0) {
         console.log("email sending");
-  
+
         for (const email of emailAddresses) {
           await sendReports(email, url);
         }
       }
-  
+
       if (directDown) {
         res.status(200).json({ message: 'Report generated successfully', url });
       } else {
@@ -294,7 +294,7 @@ export const GenerateAppReport = async (req, res) => {
 
 
 
-   
+
 
   } catch (error) {
     console.error(error);
@@ -321,7 +321,7 @@ export const GenerateReport = async (req, res) => {
         imei: imei,
         "reports.startDate": { $exists: true }
       });
-console.log(results);
+      console.log(results);
 
       if (!results.length) {
         return res.status(404).json({ success: false, message: 'No reports found.' });
@@ -348,7 +348,7 @@ console.log(results);
 
       res.status(200).json({
         success: true,
-        downloadUrl:path.path, // return the full file URL
+        downloadUrl: path.path, // return the full file URL
       });
     }
 
@@ -522,50 +522,105 @@ const sendReports = async (email, pdfPath) => {
 
 
 
+// export const GetAddress = async (req, res) => {
+//   try {
+//     const { lat, long, lang } = req.params;
+//     const lng = lang|| "en";
+
+//     const addressRecord = await CordinateAdress.findOne({ lat:lat, lon:long });
+
+//     if (addressRecord) {
+//       const address =addressRecord.address
+//       res.status(200).json({
+//         address
+//       });
+//     }else{
+
+//       const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`);
+
+//       const address=adrs.data.results[2].formatted_address;
+//       if (address) {
+
+//         res.status(200).json({
+//           address
+//         });
+//         const newAddress = new CordinateAdress({
+//           lat:lat,
+//           lon:long,
+//           address,
+//           lastFetched: new Date(),
+//         });
+
+//         await newAddress.save();
+//       } else {
+//         res.status(404).json({
+//           success: false,
+//           message: 'Address not found'
+//         });
+//       }
+
+//     }
+
+//   } catch (error) {
+//     console.error("Error fetching address:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'An error occurred while fetching the address'
+//     });
+//   }
+// };
+
+
+const roundCoord = (value, decimals = 6) => {
+  return Number(Number.parseFloat(value).toFixed(decimals));
+};
+
 export const GetAddress = async (req, res) => {
   try {
     const { lat, long, lang } = req.params;
-    const lng = lang|| "en";
+    const lng = lang || 'en';
 
-    const addressRecord = await CordinateAdress.findOne({ lat:lat, lon:long });
+    const roundedLat = roundCoord(lat);
+    const roundedLon = roundCoord(long);
 
-    if (addressRecord) {
-      const address =addressRecord.address
-      res.status(200).json({
-        address
-      });
-    }else{
+    // Step 1: Check by coordinates (fast path)
+    let existing = await CordinateAdress.findOne({ lat: roundedLat, lon: roundedLon });
+    if (existing) {
+      return res.status(200).json({ address: existing.address });
+    } else {
 
-      const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`);
+      // Step 2: Fetch from Google API
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`
+      );
+      const address = response.data.results[2]?.formatted_address || response.data.results[0]?.formatted_address;
 
-      const address=adrs.data.results[2].formatted_address;
-      if (address) {
-        
-        res.status(200).json({
-          address
-        });
-        const newAddress = new CordinateAdress({
-          lat:lat,
-          lon:long,
-          address,
-          lastFetched: new Date(),
-        });
-    
-        await newAddress.save();
-      } else {
-        res.status(404).json({
-          success: false,
-          message: 'Address not found'
-        });
+      if (!address) {
+        return res.status(404).json({ success: false, message: 'Address not found' });
       }
 
-    }
+      // Step 3: Check if this address already exists (regardless of coordinates)
+      existing = await CordinateAdress.findOne({ address });
+      if (existing) {
+        return res.status(200).json({ address: existing.address });
+      }
 
+      // Step 4: Save only if address is new
+      const newEntry = new CordinateAdress({
+        lat: roundedLat,
+        lon: roundedLon,
+        address,
+        lastFetched: new Date(),
+      });
+
+      await newEntry.save();
+      return res.status(200).json({ address });
+    }
   } catch (error) {
-    console.error("Error fetching address:", error);
+    console.error('Error fetching address:', error);
     res.status(500).json({
       success: false,
-      message: 'An error occurred while fetching the address'
+      message: 'An error occurred while fetching the address',
     });
   }
 };
