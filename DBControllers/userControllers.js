@@ -225,6 +225,37 @@ export const addDevice = async (req, res) => {
   }
 };
 
+export const deleteDevice = async (req, res) => {
+  const { id, fcmToken } = req.body;
+
+  if (!id || !fcmToken) {
+    return res.status(400).json({ message: "userId and token are required." });
+  }
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const originalDeviceCount = user.devices.length;
+
+    user.devices = user.devices.filter(device => device.fcmToken !== fcmToken);
+
+    if (user.devices.length === originalDeviceCount) {
+      return res.status(404).json({ message: "Device not found for given token." });
+    }
+
+    await user.save();
+
+    return res.status(200).json({ message: "Device deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting device:", error);
+    return res.status(500).json({ message: "Server error." });
+  }
+};
+
 
 export const updateSettings = async (req, res) => {
   try {
