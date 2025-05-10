@@ -536,7 +536,7 @@ const sendReports = async (email, pdfPath) => {
 //       });
 //     }else{
 
-//       const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`);
+//       const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyDs3BF4HE5kdu27oCgeZP3wlcR-c4euzNk&language=${lng}`);
 
 //       const address=adrs.data.results[2].formatted_address;
 //       if (address) {
@@ -613,7 +613,7 @@ export const GetAddress = async (req, res) => {
         {
           params: {
             latlng: `${lat},${long}`,
-            key: 'AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI',
+            key: 'AIzaSyDs3BF4HE5kdu27oCgeZP3wlcR-c4euzNk',
             language: lng,
           },
         }
@@ -685,7 +685,7 @@ export const GetAddressDir = async (lat, lon, lang = 'en') => {
       const googleResp = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
         params: {
           latlng: `${lat},${lon}`,
-          key: 'AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI',
+          key: 'AIzaSyDs3BF4HE5kdu27oCgeZP3wlcR-c4euzNk',
           language: lang,
         },
       });

@@ -3,7 +3,7 @@ import axios from "axios";
 const GetAddress = async (lat, lon) => {
   try {
     const lng=localStorage.getItem("lng");
-    const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`);
+    const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=AIzaSyDs3BF4HE5kdu27oCgeZP3wlcR-c4euzNk&language=${lng}`);
 
     return adrs.data.results[2].formatted_address;
   } catch (error) {
@@ -24,7 +24,7 @@ export async function UpdateCordAdress(lat, lon) {
 export const GetReportAddress = async (lat, lon) => {
   try {
     const lng="en"
-    const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI&language=${lng}`);
+    const adrs = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=AIzaSyDs3BF4HE5kdu27oCgeZP3wlcR-c4euzNk&language=${lng}`);
 console.log("report address");
 
     return adrs.data.results[2].formatted_address;
