@@ -652,3 +652,72 @@ export const GetAddress = async (req, res) => {
   }
 };
 
+export const GetAddressDir = async (lat, lon, lang = 'en') => {
+  try {
+    const roundedLat = roundCoord(lat);
+    const roundedLon = roundCoord(lon);
+
+    // Step 1: Check by coordinates
+    let existing = await CordinateAdress.findOne({ lat: roundedLat, lon: roundedLon });
+    if (existing) {
+      return existing.address;
+    }
+
+    // Step 2: Try LocationIQ API
+    let address = null;
+    try {
+      const locIqResp = await axios.get(`https://us1.locationiq.com/v1/reverse`, {
+        params: {
+          key: 'pk.403a01c2beaf10922c3328109209b853',
+          lat,
+          lon,
+          format: 'json',
+          'accept-language': lang,
+        },
+      });
+      address = locIqResp.data.display_name;
+    } catch (locIqError) {
+      console.warn('LocationIQ API failed, falling back to Google Maps');
+    }
+
+    // Step 3: Google fallback
+    if (!address) {
+      const googleResp = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+        params: {
+          latlng: `${lat},${lon}`,
+          key: 'AIzaSyBdtCj5H0N2_vLOHy4YuFKz_tc_NfPI5XI',
+          language: lang,
+        },
+      });
+      address =
+        googleResp.data.results[2]?.formatted_address ||
+        googleResp.data.results[0]?.formatted_address;
+    }
+
+    if (!address) {
+      return null;
+    }
+
+    // Step 4: Check if address already stored
+    existing = await CordinateAdress.findOne({ address });
+    if (existing) {
+      return existing.address;
+    }
+
+    // Step 5: Save new entry
+    const newEntry = new CordinateAdress({
+      lat: roundedLat,
+      lon: roundedLon,
+      address,
+      lastFetched: new Date(),
+    });
+
+    await newEntry.save();
+    return address;
+  } catch (error) {
+    console.error('Error fetching address:', error);
+    return null;
+  }
+};
+
+

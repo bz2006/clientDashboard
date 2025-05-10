@@ -1,3 +1,4 @@
+import { GetAddressDir } from "../DBControllers/unitsControllers.js";
 import { GetReportAddress } from "./getCordAddress.js";
 
 function calculateTimeDifference(startTime, endTime) {
@@ -56,8 +57,8 @@ export async function processReportData(reports) {
         const duration = calculateTimeDifference(report.totalTime?.startTime, report.totalTime?.endTime);
 
         // Extract start and stop locations from the path
-        const startLocation = await GetReportAddress(report.path.start.latitude, report.path.start.longitude);
-        const stopLocation = await GetReportAddress(report.path.stop.latitude, report.path.stop.longitude);
+        const startLocation = await GetAddressDir(report.path.start.latitude, report.path.start.longitude);
+        const stopLocation = await GetAddressDir(report.path.stop.latitude, report.path.stop.longitude);
 
         // Get start and stop KM values from the Distance field
         const startKm = report.Distance.startOdometer;
