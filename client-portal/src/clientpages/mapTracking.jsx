@@ -192,10 +192,11 @@ function MapTracking() {
                               <p className="font-semibold text-gray-700 dark:text-gray-300">Speed:</p>
                               <p className="text-gray-900 dark:text-gray-100">{velocity} km/h</p>
                             </div>
+                                {asset.settings?.odometer === true ? (
                             <div>
                               <p className="font-semibold text-gray-700 dark:text-gray-300">Odometer:</p>
                               <p className="text-gray-900 dark:text-gray-100">{odo ? odo : asset.liveData.gps_odometer} km</p>
-                            </div>
+                            </div>):(null)}
                             <div>
                               <p className="font-semibold text-gray-700 dark:text-gray-300">Ignition:</p>
                               <p className="text-gray-900 dark:text-gray-100">

@@ -32,6 +32,7 @@ function CoreTracking() {
         alerts: 0
     })
     const navigate = useNavigate();
+console.log(Data);
 
     const toggleRow = (id) => {
         setExpandedRow(expandedRow === id ? null : id);
@@ -73,7 +74,7 @@ function CoreTracking() {
                 const alerts = res.data.units.filter(unit => unit.liveData.header !== "BSTPL$1").length;
 
                 setheaders({ total, moving, stopped, alerts });
-            } 
+            }
             setloading(false)
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -94,7 +95,7 @@ function CoreTracking() {
                 const alerts = res.data.units.filter(unit => unit.liveData.header !== "BSTPL$1").length;
 
                 setheaders({ total, moving, stopped, alerts });
-            } 
+            }
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -215,7 +216,7 @@ function CoreTracking() {
                                     <th scope="col" className="px-4 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Current Location</th>
                                     <th scope="col" className="px-4 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">GPS Info</th>
                                     <th scope="col" className="px-4 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Dashboard</th>
-                                    <th scope="col" className="px-4 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Telemetry</th>
+                                    {/* <th scope="col" className="px-4 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Telemetry</th> */}
                                     <th scope="col" className="px-4 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
                                     <th scope="col" className="px-4 py-4 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Caution</th>
                                 </tr>
@@ -261,19 +262,22 @@ function CoreTracking() {
                                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                                 <div className="flex flex-col items-center space-y-3 text-md">
                                                     <h1><span className="font-bold">{item.liveData.speed}</span> km/h</h1>
-                                                    <h1>
-                                                        {item.liveData.gps_odometer.toString().padStart(7, '0').split('').map((digit, index) => (
-                                                            <span
-                                                                key={index}
-                                                                className={`bg-gray-700 dark:bg-black p-1 text-white ${index === 6 ? 'bg-gray-800 dark:bg-gray-500' : ''}`}
-                                                            >
-                                                                {digit}
-                                                            </span>
-                                                        ))}
-                                                    </h1>
+                                                    {item.settings?.odometer === true ? (
+                                                        <h1>
+                                                            {item.liveData.gps_odometer.toString().padStart(7, '0').split('').map((digit, index) => (
+                                                                <span
+                                                                    key={index}
+                                                                    className={`bg-gray-700 dark:bg-black p-1 text-white ${index === 6 ? 'bg-gray-800 dark:bg-gray-500' : ''}`}
+                                                                >
+                                                                    {digit}
+                                                                </span>
+                                                            ))}
+                                                        </h1>
+                                                    ) : (null)}
+
                                                 </div>
                                             </td>
-                                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{"telemetry"}</td>
+                                            {/* <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{"telemetry"}</td> */}
                                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                                 {item.liveData.speed > "0" && item.liveData.digital_input_1_status === "1"
                                                     ? "Moving"
@@ -283,7 +287,10 @@ function CoreTracking() {
                                                             ? "Stopped"
                                                             : "Unknown"}
                                             </td>
-                                            <AlertRow item={item.liveData.header} />
+                                            <td className={`px-6 py-4 text-sm ${item.liveData.header === "NIL" ? "text-gray-900 dark:text-gray-300" : "text-red-500 dark:text-red-500 font-bold"} text-center`}>
+                                                {item.liveData.header}
+                                            </td>
+                                            {/* <AlertRow item={item.liveData.header} /> */}
                                         </tr>
 
                                         {/* Collapsible Row */}

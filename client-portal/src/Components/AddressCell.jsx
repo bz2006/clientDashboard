@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { UpdateCordAdress } from "../DataHelpers/getCordAddress";
 
-const AddressCell = ({ latitude, longitude }) => {
+const AddressCell = ({ latitude, longitude, maxLength = 70 }) => {
   const [address, setAddress] = useState("Fetching address...");
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const needsTruncation = address.length > maxLength;
+  
+  // Create truncated version if needed
+  const truncatedText = needsTruncation 
+    ? address.substring(0, maxLength) + '...' 
+    : address;
+  
+  // Toggle expanded state
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -22,7 +34,12 @@ const AddressCell = ({ latitude, longitude }) => {
     fetchAddress();
   }, [latitude, longitude]); // Dependency array ensures the effect runs when latitude or longitude changes
 
-  return <span>{address}</span>;
+  return <span
+        className={`text-sm text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-200 ${needsTruncation ? 'cursor-pointer' : ''}`}
+        onClick={needsTruncation ? toggleExpand : undefined}
+      >
+        {isExpanded ? address : truncatedText}
+      </span>;
 };
 
 export default AddressCell;

@@ -18,7 +18,7 @@ export const getUserUnits = async (req, res) => {
 
     // Fetch units and their latest report's path along with liveData and other fields
     const units = await Units.find({ customer: id })
-      .select('_id imei simNumber simAttached customer assetRegNo assetType assetMake assetModel gprsPort liveData shipment model status remarks stockListed')
+      .select('_id imei simNumber simAttached customer assetRegNo assetType assetMake assetModel gprsPort liveData shipment model status remarks stockListed settings')
       .populate({
         path: 'reports',
         options: { sort: { startDate: -1 }, limit: 1 },
@@ -48,6 +48,7 @@ export const getUserUnits = async (req, res) => {
         liveData: unit.liveData,
         shipment: unit.shipment,
         model: unit.model,
+        settings:unit.settings,
         status: unit.status,
         remarks: unit.remarks,
         stockListed: unit.stockListed,
@@ -73,7 +74,7 @@ export const getUserUnits = async (req, res) => {
 export const getLiveData = async (req, res) => {
   try {
     const { id } = req.params;
-    const data = await Units.findById(id, 'liveData');
+    const data = await Units.findById(id, 'liveData settings');
 
     if (!data) {
       return res.status(404).json({ success: false, message: 'Unit not found' });
@@ -598,7 +599,9 @@ export const GetAddress = async (req, res) => {
           lat,
           lon: long,
           format: 'json',
-          'accept-language': lng
+        },
+        headers: {
+          'Accept-Language': lang, // ✅ Proper placement
         },
       });
       address = locIqResp.data.display_name;
@@ -672,7 +675,9 @@ export const GetAddressDir = async (lat, lon, lang = 'en') => {
           lat,
           lon,
           format: 'json',
-          'accept-language': lang,
+        },
+        headers: {
+          'Accept-Language': lang, // ✅ Proper placement
         },
       });
       address = locIqResp.data.display_name;
